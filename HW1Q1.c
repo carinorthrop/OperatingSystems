@@ -60,7 +60,7 @@ void childprocesses(int N)
 
             else
             {
-                return; 
+                wait(0); 
             }
         }
     }
