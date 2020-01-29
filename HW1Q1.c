@@ -72,22 +72,20 @@ int main(int argc, char *argv[])
     if (argc < 2)
     {
         printf("N is not specified in the command prompt. Please enter one number for N.\n");
-        exit(0);
     }
     //parameter is not a number
     if (!isdigit(*argv[1]))
     {
         printf("The parameter entered for N is not a number. Please enter one number for N.\n");
-        exit(0);
     }
     //too many parameters
     if (argc > 2)
     {
         printf("There were too many parameters entered for N. Please enter one number for N.\n");
-        exit(0)
     }
     else 
     {
         childprocesses(atoi(argv[1]));
     }
+    return(0);
 }
