@@ -60,7 +60,7 @@ void childprocesses(int N)
 
             else
             {
-                wait(NULL);
+                return; 
             }
         }
     }
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
     if (argc < 2)
     {
         printf("N is not specified in the command prompt. Please enter one number for N. \n");
-        //exit(0);
+        exit(0);
     }
     //parameter is not a number
     if (!isdigit(*argv[1]))
