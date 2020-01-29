@@ -8,7 +8,7 @@
 #include <stdio.h>
 //#include <ctype.h>
 #include <sys/wait.h>
-//#include <stdlib.h>
+#include <stdlib.h>
 
 void childprocesses(int N)
 {
