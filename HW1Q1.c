@@ -24,7 +24,7 @@ void childprocesses(int N)
     //forks parent
     int parent = (int) fork();
 
-    if (parent1 == 0)
+    if (parent == 0)
     {
         for (int x = 0; x < N; x++)
         {
