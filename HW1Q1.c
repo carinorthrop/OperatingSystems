@@ -45,7 +45,7 @@ void childprocesses(int N)
                 sleep(2);
             } 
         }
-    //child process 2 
+    //child process 3
         else
         {
             int child2 = (int) fork();
@@ -69,11 +69,11 @@ void childprocesses(int N)
 int main(int argc, char *argv[])
 {
     //check parameters
-    //N not specified 
+    //N not specified
     if (argc < 2)
     {
-        printf("N is not specified in the command prompt. Please enter one number for N.\n");
-        exit(0);
+        printf("N is not specified in the command prompt. Please enter one number for N. \n");
+        //exit(0);
     }
     //parameter is not a number
     if (!isdigit(*argv[1]))
