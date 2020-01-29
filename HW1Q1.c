@@ -60,7 +60,7 @@ void childprocesses(int N)
 
             else
             {
-                return 0; 
+                return; 
             }
         }
     }
@@ -91,6 +91,6 @@ int main(int argc, char *argv[])
     {
         childprocesses(atoi(argv[1]));
     }
-    
+
     return(0);
 }
