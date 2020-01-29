@@ -24,6 +24,7 @@ void childprocesses(int N)
     //forks parent
     int parent = (int) fork();
 
+    //child process 1 
     if (parent == 0)
     {
         for (int x = 0; x < N; x++)
@@ -32,11 +33,11 @@ void childprocesses(int N)
             sleep(2);
         }
     }
-
+    //child process 2 
     else
     {
-        int parent2 = (int) fork();
-        if (parent2 == 0)
+        int child1 = (int) fork();
+        if (child1 == 0)
         {
             for (int x = 0; x < N; x++)
             {
@@ -44,11 +45,11 @@ void childprocesses(int N)
                 sleep(2);
             } 
         }
-
+    //child process 2 
         else
         {
-            int parent3 = (int) fork();
-            if (parent3 == 0)
+            int child2 = (int) fork();
+            if (child2 == 0)
             {
                 for (int x = 0; x < N; x++)
                 {
@@ -78,11 +79,13 @@ int main(int argc, char *argv[])
     if (!isdigit(*argv[1]))
     {
         printf("The parameter entered for N is not a number. Please enter one number for N.\n");
+        exit(0);
     }
     //too many parameters
     if (argc > 2)
     {
         printf("There were too many parameters entered for N. Please enter one number for N.\n");
+        exit(0);
     }
     else 
     {
