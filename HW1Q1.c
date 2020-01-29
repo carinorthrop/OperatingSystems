@@ -3,12 +3,12 @@
 // Due Febuary 3rd
 // OS 4029
 
-#include <unistd.h>
-#include <sys/types.h>
-#include <stdio.h>
-//#include <ctype.h>
+//#include <unistd.h>
+#include <ctype.h>
 #include <sys/wait.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <stdio.h>
 
 void childprocesses(int N)
 {
