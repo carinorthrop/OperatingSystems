@@ -6,9 +6,9 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
+//#include <ctype.h>
 #include <sys/wait.h>
+//#include <stdlib.h>
 
 void childprocesses(int N)
 {
@@ -72,19 +72,19 @@ int main(int argc, char *argv[])
     //N not specified
     if (argc < 2)
     {
-        printf("N is not specified in the command prompt. Please enter one number for N. \n");
+        printf("N is not specified. Please enter one number for N. (i.e. ./HW1Q1 3) \n");
         exit(0);
     }
     //parameter is not a number
     if (!isdigit(*argv[1]))
     {
-        printf("The parameter entered for N is not a number. Please enter one number for N.\n");
-        exit(0);
+        printf("The parameter entered for N is not a number. Please enter one number for N. (i.e. ./HW1Q1 3) \n");
+        exit(0); 
     }
     //too many parameters
     if (argc > 2)
     {
-        printf("There were too many parameters entered for N. Please enter one number for N.\n");
+        printf("There were too many parameters entered for N. Please enter one number for N. (i.e. ./HW1Q1 3) \n");
         exit(0);
     }
     else 
