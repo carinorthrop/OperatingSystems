@@ -16,7 +16,7 @@ void childprocess(const char * file_name)
     {
         //shows directory 
         printf("Directory: \n");
-        execl("/bin/ls", "ls", "-l", file_name, NULL); 
+        execl("/home/carinorthrop/OperatingSystems/ls", "ls", "-l", file_name, NULL); 
         exit(0); 
     }
 
@@ -47,7 +47,7 @@ void childprocess(const char * file_name)
             else
             {
                 //print the PID only once
-                printf("PID: %x \n", getpid());
+                printf("PID: \n %x \n", getpid());
                 wait(0); 
             }               
         }
