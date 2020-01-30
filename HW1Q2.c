@@ -1,44 +1,82 @@
-#include <stdio.h>
-#include <sys/types.h>
+// Caroline Northrop 
+// Homework 1 Question 2 
+// Due Febuary 3rd
+// OS 4029
+
 #include <unistd.h>
-#include <stdlib.h>
+#include <ctype.h>
 #include <sys/wait.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <stdio.h>
+
+void childprocess(const char * file_name)
+{
+    if (fork() == 0) 
+    {
+        //shows directory 
+        printf("Directory: \n");
+        execl("/home/carinorthrop/OperatingSystems/ls", "ls", "-l", file_name, NULL); 
+        exit(0); 
+    }
+
+    else
+    {
+        wait(0); 
+
+        if(fork() == 0)  
+        {
+            //shows processes running
+            printf("Processes Running: \n");
+            execl("/bin/ps", "ps", "-ef", NULL);
+            exit(0);
+        }
+
+        else
+        {
+            wait(0);
+
+            if(fork() == 0)
+            {
+                //shows file contents 
+                printf("File Contents: \n");
+                execl("/bin/more", "more", file_name, NULL);
+                exit(0);
+            }
+
+            else
+            {
+                //print the PID only once
+                printf("PID: \n %x \n", getpid());
+                wait(0); 
+            }               
+        }
+    }   
+}
+
 
 int main(int argc, char ** argv)
 {
-if(argc != 2) // stop user if not proper argument
-{
-printf("Usage: you_program_name file_name\n");
-return 0;
-}
-const char * filename = argv[1]; // take second argument as a filename
-if(fork() == 0) // create first child process
-{
-execl("/bin/ls","ls","-l",filename,NULL); // exicute command using execl
-exit(0); // exit after compliting process
-}
-else
-{
-wait(0); // wait until first child exit
-if(fork() == 0)
-{
-execl("/bin/ps","ps","-ef",NULL);
-exit(0);
-}
-else
-{
-wait(0);
-if(fork() == 0)
-{
-execl("/bin/more","more",filename,NULL);
-exit(0);
-}
-else
-{
+    //check parameters
+    //file_name is not included 
+    if (argc < 2)
+    {
+        printf("Parameters are not specified. Please enter the file_name (Usage: ./part2 hw1textfile) \n");
+        exit(0);
+    }
 
-printf("PID - %d\n",getpid()); //print parent PID
-wait(0); // wait till last child exit
-}
-}
-}
+    //too many parameters 
+    if (argc > 2)
+    {
+        printf("There were too many parameters entered. Please enter the file_name. (Usage: ./part2 hw1textfile) \n");
+        exit(0);
+    }
+    // if parameters are correct, continue with the program 
+    else 
+    {
+      childprocess(argv[1]);  
+    }
+
+    printf("Main process terminates \n");
+    return(0);
 }
