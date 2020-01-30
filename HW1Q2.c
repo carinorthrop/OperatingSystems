@@ -10,43 +10,23 @@
 #include <sys/types.h>
 #include <stdio.h>
 
-
-int main(int argc, char ** argv)
+void process(const char * file_name)
 {
-    //check parameters
-    //file_name is not included 
-    if (argc < 2)
-    {
-        printf("Parameters are not specified. Please enter the file_name (Usage: ./HW1Q2 hw1textfile) \n");
-        exit(0);
-    }
-
-    //too many parameters 
-    if (argc > 2)
-    {
-        printf("There were too many parameters entered. Please enter the file_name. (Usage: ./HW1Q2 hw1textfile) \n");
-        exit(0);
-    }
-    // if parameters are correct, continue with the program 
-    else 
-    {
-        //file_name is taken in as a parameter
-        const char * file_name = argv[1];
 
         //child process 1 
         if (fork() == 0) 
         {
-            //execl system command 
+            //shows directory 
             execl("/bin/ls", "ls", "-l", file_name, NULL); 
             exit(0); 
         }
 
-        //
         else
         {
-            wait(0); // wait until first child exit
+            wait(0); 
             if(fork() == 0)
             {
+                //shows processes running
                 execl("/bin/ps", "ps", "-ef", NULL);
                 exit(0);
             }
@@ -56,18 +36,42 @@ int main(int argc, char ** argv)
                 wait(0);
                 if(fork() == 0)
                 {
+                    //shows file contects 
                     execl("/bin/more", "more", file_name, NULL);
                     exit(0);
                 }
 
                 else
                 {
+                    //print the PID only once
                     printf("PID - %d\n", getpid());
                     wait(0); 
                 }               
             }
         }   
-        
+}
+
+
+int main(int argc, char ** argv)
+{
+    //check parameters
+    //file_name is not included 
+    if (argc < 2)
+    {
+        printf("Parameters are not specified. Please enter the file_name (Usage: ./part2 hw1textfile) \n");
+        exit(0);
+    }
+
+    //too many parameters 
+    if (argc > 2)
+    {
+        printf("There were too many parameters entered. Please enter the file_name. (Usage: ./part2 hw1textfile) \n");
+        exit(0);
+    }
+    // if parameters are correct, continue with the program 
+    else 
+    {
+      process(argv[1]);  
     }
 
     return(0);
