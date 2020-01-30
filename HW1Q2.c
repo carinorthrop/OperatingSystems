@@ -16,7 +16,7 @@ void childprocess(const char * file_name)
     {
         //shows directory 
         printf("Directory: \n");
-        execl("/home/carinorthrop/OperatingSystems/ls", "ls", "-l", file_name, NULL); 
+        execl("/bin/ls", "ls", "-l", file_name, NULL); 
         exit(0); 
     }
 
@@ -61,14 +61,14 @@ int main(int argc, char ** argv)
     //file_name is not included 
     if (argc < 2)
     {
-        printf("Parameters are not specified. Please enter the file_name (Usage: ./part2 hw1textfile) \n");
+        printf("Parameters are not specified. Please enter the file_name (Usage: ./HW1Q2 file_name) \n");
         exit(0);
     }
 
     //too many parameters 
     if (argc > 2)
     {
-        printf("There were too many parameters entered. Please enter the file_name. (Usage: ./part2 hw1textfile) \n");
+        printf("There were too many parameters entered. Please enter the file_name. (Usage: ./HW1Q2 file_name) \n");
         exit(0);
     }
     // if parameters are correct, continue with the program 
