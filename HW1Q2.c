@@ -37,7 +37,7 @@ int main(int argc, char ** argv)
         if (fork() == 0) 
         {
             //execl system command 
-            execl("/bin/ls", "ls", "-l", file_name, 0); 
+            execl("/bin/ls", "ls", "-l", file_name, NULL); 
             exit(0); 
         }
 
@@ -47,7 +47,7 @@ int main(int argc, char ** argv)
             wait(0); // wait until first child exit
             if(fork() == 0)
             {
-                execl("/bin/ps", "ps", "-ef", 0);
+                execl("/bin/ps", "ps", "-ef", NULL);
                 exit(0);
             }
 
@@ -56,7 +56,7 @@ int main(int argc, char ** argv)
                 wait(0);
                 if(fork() == 0)
                 {
-                    execl("/bin/more", "more", file_name, 0);
+                    execl("/bin/more", "more", file_name, NULL);
                     exit(0);
                 }
 
