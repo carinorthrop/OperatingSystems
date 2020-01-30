@@ -16,7 +16,7 @@ void childprocess(const char * file_name)
     {
         //shows directory 
         printf("Directory: \n");
-        execl("/bin/ls", "ls", "-l", file_name, NULL); 
+        execl("/ls", "ls", "-l", file_name, NULL); 
         exit(0); 
     }
 
