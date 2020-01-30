@@ -10,30 +10,64 @@
 #include <sys/types.h>
 #include <stdio.h>
 
-int main(int argc, char** argv)
+
+int main(int argc, char ** argv)
 {
     //check parameters
-    //N not specified
+    //file_name is not included 
     if (argc < 2)
     {
-        printf("N is not specified. Please enter one number for N. (i.e. ./HW1Q1 3) \n");
+        printf("Parameters are not specified. Please enter the file_name (Usage: ./HW1Q2 hw1textfile) \n");
         exit(0);
     }
-    //parameter is not a number
-    if (!isdigit(*argv[1]))
-    {
-        printf("The parameter entered for N is not a number. Please enter one number for N. (i.e. ./HW1Q1 3) \n");
-        exit(0); 
-    }
-    //too many parameters
+
+    //too many parameters 
     if (argc > 2)
     {
-        printf("There were too many parameters entered for N. Please enter one number for N. (i.e. ./HW1Q1 3) \n");
+        printf("There were too many parameters entered. Please enter the file_name. (Usage: ./HW1Q2 hw1textfile) \n");
         exit(0);
     }
+    // if parameters are correct, continue with the program 
     else 
     {
-        childprocesses(atoi(argv[1]));
+        //file_name is taken in as a parameter
+        const char * file_name = argv[1];
+
+        //child process 1 
+        if (fork() == 0) 
+        {
+            //execl system command 
+            execl("/bin/ls", "ls", "-l", file_name, 0); 
+            exit(0); 
+        }
+
+        //
+        else
+        {
+            wait(0); // wait until first child exit
+            if(fork() == 0)
+            {
+                execl("/bin/ps", "ps", "-ef", 0);
+                exit(0);
+            }
+
+            else
+            {
+                wait(0);
+                if(fork() == 0)
+                {
+                    execl("/bin/more", "more", filename, 0);
+                    exit(0);
+                }
+
+                else
+                {
+                    printf("PID - %d\n", getpid());
+                    wait(0); 
+                }               
+            }
+        }   
+        
     }
 
     return(0);
