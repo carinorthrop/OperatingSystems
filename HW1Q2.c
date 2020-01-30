@@ -15,6 +15,7 @@ void childprocess(const char * file_name)
     if (fork() == 0) 
     {
         //shows directory 
+        printf("Directory: \n");
         execl("/bin/ls", "ls", "-l", file_name, NULL); 
         exit(0); 
     }
@@ -26,6 +27,7 @@ void childprocess(const char * file_name)
         if(fork() == 0)  
         {
             //shows processes running
+            printf("Processes Running: \n");
             execl("/bin/ps", "ps", "-ef", NULL);
             exit(0);
         }
@@ -36,7 +38,8 @@ void childprocess(const char * file_name)
 
             if(fork() == 0)
             {
-                //shows file contects 
+                //shows file contents 
+                printf("File Contents: \n");
                 execl("/bin/more", "more", file_name, NULL);
                 exit(0);
             }
@@ -74,5 +77,6 @@ int main(int argc, char ** argv)
       childprocess(argv[1]);  
     }
 
+    printf("Main Process Terminates \n");
     return(0);
 }
