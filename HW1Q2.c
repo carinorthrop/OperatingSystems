@@ -10,45 +10,45 @@
 #include <sys/types.h>
 #include <stdio.h>
 
-void process(const char * file_name)
+void childprocess(const char * file_name)
 {
+    if (fork() == 0) 
+    {
+        //shows directory 
+        execl("/bin/ls", "ls", "-l", file_name, NULL); 
+        exit(0); 
+    }
 
-        //child process 1 
-        if (fork() == 0) 
+    else
+    {
+        wait(0); 
+
+        if(fork() == 0)  
         {
-            //shows directory 
-            execl("/bin/ls", "ls", "-l", file_name, NULL); 
-            exit(0); 
+            //shows processes running
+            execl("/bin/ps", "ps", "-ef", NULL);
+            exit(0);
         }
 
         else
         {
-            wait(0); 
+            wait(0);
+
             if(fork() == 0)
             {
-                //shows processes running
-                execl("/bin/ps", "ps", "-ef", NULL);
+                //shows file contects 
+                execl("/bin/more", "more", file_name, NULL);
                 exit(0);
             }
 
             else
             {
-                wait(0);
-                if(fork() == 0)
-                {
-                    //shows file contects 
-                    execl("/bin/more", "more", file_name, NULL);
-                    exit(0);
-                }
-
-                else
-                {
-                    //print the PID only once
-                    printf("PID - %d\n", getpid());
-                    wait(0); 
-                }               
-            }
-        }   
+                //print the PID only once
+                printf("PID: %x \n", getpid());
+                wait(0); 
+            }               
+        }
+    }   
 }
 
 
@@ -71,7 +71,7 @@ int main(int argc, char ** argv)
     // if parameters are correct, continue with the program 
     else 
     {
-      process(argv[1]);  
+      childprocess(argv[1]);  
     }
 
     return(0);
