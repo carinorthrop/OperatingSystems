@@ -56,7 +56,7 @@ int main(int argc, char ** argv)
                 wait(0);
                 if(fork() == 0)
                 {
-                    execl("/bin/more", "more", filename, 0);
+                    execl("/bin/more", "more", file_name, 0);
                     exit(0);
                 }
 
