@@ -16,7 +16,7 @@ void childprocess(const char * file_name)
     {
         //shows directory 
         printf("Directory: \n");
-        execl("/bin/ls", "ls", "-l", file_name, NULL); 
+        execl("/home/carinorthrop/OperatingSystems/ls", "ls", "-l", file_name, NULL); 
         exit(0); 
     }
 
@@ -28,7 +28,7 @@ void childprocess(const char * file_name)
         {
             //shows processes running
             printf("Processes Running: \n");
-            execl("/bin/ps", "ps", "-ef", NULL);
+            execl("/home/carinorthrop/OperatingSystems/ps", "ps", "-ef", NULL);
             exit(0);
         }
 
@@ -40,7 +40,7 @@ void childprocess(const char * file_name)
             {
                 //shows file contents 
                 printf("File Contents: \n");
-                execl("/bin/more", "more", file_name, NULL);
+                execl("/home/carinorthrop/OperatingSystems/more", "more", file_name, NULL);
                 exit(0);
             }
 
@@ -77,6 +77,6 @@ int main(int argc, char ** argv)
       childprocess(argv[1]);  
     }
 
-    printf("Main Process Terminates \n");
+    printf("Main process terminates \n");
     return(0);
 }
