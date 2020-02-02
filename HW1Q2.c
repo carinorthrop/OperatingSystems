@@ -80,7 +80,7 @@ int main(int argc, char ** argv)
     else 
     {
       childprocess(argv[1]); 
-      printf("\n Main process terminates \n");  
+      printf("\nMain process terminates \n");  
     }
     return(0);
 }
