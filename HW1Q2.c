@@ -72,9 +72,8 @@ int main(int argc, char ** argv)
         exit(0);
     }
     //file does not exist 
-    {
      if(access(argv[1], F_OK) == -1)
-     {
+    {
         printf("This file does not exist");
         exit(0);
     }
