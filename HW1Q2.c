@@ -47,7 +47,7 @@ void childprocess(const char * file_name)
             else
             {
                 //print the PID only once
-                printf("PID: %x ", getpid());
+                printf("PID: %x \n", getpid());
                 wait(0); 
             }              
         }
