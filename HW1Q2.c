@@ -12,10 +12,13 @@
 
 void childprocess(const char * file_name)
 {
+    //print the PID only once
+    printf("PID: %x ", getpid());
+
     if (fork() == 0) 
     {
         //shows directory 
-        printf("Directory: \n");
+        printf("Current Directory: \n");
         execl("/bin/ls", "ls", "-l", NULL); 
         exit(0); 
     }
