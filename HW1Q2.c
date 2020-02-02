@@ -15,8 +15,8 @@ void childprocess(const char * file_name)
     if (fork() == 0) 
     {
         //shows directory 
-        printf("Directory: \n");
-        execl("/ls", "ls", "-l", file_name, NULL); 
+        printf("Directory:");
+        execl("/bin/ls", "ls", "-l", NULL); 
         exit(0); 
     }
 
@@ -27,7 +27,7 @@ void childprocess(const char * file_name)
         if(fork() == 0)  
         {
             //shows processes running
-            printf("Processes Running: \n");
+            printf("Processes Running: ");
             execl("/bin/ps", "ps", "-ef", NULL);
             exit(0);
         }
@@ -39,7 +39,7 @@ void childprocess(const char * file_name)
             if(fork() == 0)
             {
                 //shows file contents 
-                printf("File Contents: \n");
+                printf("File Contents: ");
                 execl("/bin/more", "more", file_name, NULL);
                 exit(0);
             }
@@ -47,11 +47,12 @@ void childprocess(const char * file_name)
             else
             {
                 //print the PID only once
-                printf("PID: %x \n", getpid());
+                printf("PID: %x ", getpid());
                 wait(0); 
             }               
         }
-    }   
+    } 
+    printf("Main process terminates \n");  
 }
 
 
@@ -64,11 +65,17 @@ int main(int argc, char ** argv)
         printf("Parameters are not specified. Please enter the file_name (Usage: ./HW1Q2 file_name) \n");
         exit(0);
     }
-
     //too many parameters 
     if (argc > 2)
     {
         printf("There were too many parameters entered. Please enter the file_name. (Usage: ./HW1Q2 file_name) \n");
+        exit(0);
+    }
+    //file does not exist 
+    {
+     if(access(argv[1], F_OK) == -1)
+     {
+        printf("This file does not exist");
         exit(0);
     }
     // if parameters are correct, continue with the program 
@@ -76,7 +83,5 @@ int main(int argc, char ** argv)
     {
       childprocess(argv[1]);  
     }
-
-    printf("Main process terminates \n");
     return(0);
 }
