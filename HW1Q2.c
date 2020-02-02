@@ -47,7 +47,6 @@ void childprocess(const char * file_name)
             else
             {
                 //print the PID only once
-                printf("\n");
                 printf("PID: %x \n", getpid());
                 wait(0); 
             }              
@@ -81,7 +80,7 @@ int main(int argc, char ** argv)
     else 
     {
       childprocess(argv[1]); 
-      printf("Main process terminates \n");  
+      printf("\n Main process terminates \n");  
     }
     return(0);
 }
