@@ -12,9 +12,6 @@
 
 void childprocess(const char * file_name)
 {
-    //print the PID only once
-    printf("PID: %x ", getpid());
-
     if (fork() == 0) 
     {
         //shows directory 
@@ -45,7 +42,14 @@ void childprocess(const char * file_name)
                 printf("File Contents: \n");
                 execl("/bin/more", "more", file_name, NULL);
                 exit(0);
-            }              
+            }
+
+          /*  else
+            {
+                //print the PID only once
+                printf("PID: %x ", getpid());
+                wait(0); 
+            } */              
         }
     }  
 }
@@ -76,7 +80,10 @@ int main(int argc, char ** argv)
     else 
     {
       childprocess(argv[1]); 
-      printf("Main process terminates \n");  
+      printf("Main process terminates \n"); 
+      //print the PID only once
+      printf("PID: %x ", getpid());
+      wait(0);  
     }
     return(0);
 }
