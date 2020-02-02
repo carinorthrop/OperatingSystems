@@ -27,9 +27,6 @@ void childprocess(const char * file_name)
         if(fork() == 0)  
         {
             //shows processes running
-            //print the PID only once
-            printf("PID: %x ", getpid());
-            wait(0); 
             printf("Processes Running: \n");
             execl("/bin/ps", "ps", "-ef", NULL);
             exit(0);
@@ -47,12 +44,12 @@ void childprocess(const char * file_name)
                 exit(0);
             }
 
-          /*  else
+            else
             {
                 //print the PID only once
                 printf("PID: %x ", getpid());
                 wait(0); 
-            } */              
+            }              
         }
     }  
 }
