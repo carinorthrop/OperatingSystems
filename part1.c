@@ -42,8 +42,7 @@ int main(int argc, char *argv[])
                 close(fd);
 
                 //execute the file
-                execl(argv[1], argv[1], (char*)NULL);
-                exit(0);
+                execl(argv[1], argv[1], (char*)0);
             }
     }
     return 0;
