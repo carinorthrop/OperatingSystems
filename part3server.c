@@ -21,8 +21,9 @@ int main(int argc, char *argv[])
     char line[MAX];
     
     //create pipe
-    mkfifo(pipe, 0666); 
     char* pipe = "/tmp/part3";
+    mkfifo(pipe, 0666); 
+    
 
     int output = open(pipe, O_RDONLY);
 
