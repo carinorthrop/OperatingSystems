@@ -25,7 +25,10 @@ int main()
     //Makes files uppercase 
     FILE *fp2 = popen("tr 'a-z' 'A-Z'", "w");
     
-    fputs(&line[0], fp2);
+    while (fgets(line, MAX, fp != 0))
+    {
+        fputs(&line[0], fp2);
+    }
 
     //closes pipes
     pclose(fp1);
