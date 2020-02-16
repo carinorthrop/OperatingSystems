@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
         printf("%s",line);
 
         //check to see if there is a stop from client 
-        if(strcmp(line, "Stop\n") == 0)
+        if(!strcmp(line, "Stop\n"))
         {
             break;
         }
