@@ -20,10 +20,10 @@ int main()
     char line[MAXLINE];
     //Finds all the files with .c 
     FILE *fp = popen("find . -name '*.c'", "w");
-    //Closes the file
     pclose(fp);
+    //Closes the file
     //Finds all the files with .c and makes them uppercase 
-    FILE *fp1 = popen("find . -name '*.c' | tr 'a-z' 'A-Z'", "w");
+    FILE *fp1 = popen("tr 'a-z' 'A-Z'", "w");
     //Closes the file
     pclose(fp1);
 }
