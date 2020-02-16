@@ -65,6 +65,6 @@ int main(int argc, char *argv[])
     
     //close the pipes
     close(fd1);
-    fclose(fp2);
+    fclose(fd2);
     return 0;
 }
