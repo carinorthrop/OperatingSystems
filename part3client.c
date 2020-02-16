@@ -15,39 +15,46 @@
 #include <fcntl.h>
 
 
-int main(int argc, char *argv[]) {
-    //Verify correct number of arguments 
+int main(int argc, char *argv[])
+ {
+    //parameter checking
     if (argc != 2) {
-        printf("Please enter the correct number of arguments. Only need filename");
-        exit(1);
-    }
-    const int MAXLINE = 255;
-    char line[MAXLINE];
-    int input_fd;
-    char* pipe = "/tmp/part3";
-
-    //Create Named Pipe
-    mkfifo(pipe,0666); 
-
-    input_fd = open(pipe, O_WRONLY);
-
-    if (input_fd == -1) {
-        printf("Error opening file");
+        printf("The correct parameters were not entered. Usage: file_name \n");
         exit(0);
     }
 
-    FILE *fp = fopen(argv[1], "r");
+    const int MAX = 255;
+    char line[MAX];
+    char* pipe = "/part3";
 
-    while(fgets(line, MAXLINE, fp) != NULL){
-        for (int i = 0; i < strlen(line); i++) {
-            line[i] = toupper(line[i]);
-        }
-        write(input_fd,line,MAXLINE);
-        printf("%s",line);
+    //create the named pipe
+    mkfifo(pipe,0666); 
+
+    int input = open(pipe, O_WRONLY);
+
+    //open the file 
+    FILE *fd = fopen(argv[1], "r");
+
+    //error checking on the file
+    if (input == -1) 
+    {
+        printf("There was a problem opening the file.");
+        exit(0);
     }
 
-    write(input_fd, "Stop\n", MAXLINE);
-    fclose(fp);
-    close(input_fd);
+
+    while(fgets(line, MAX, fd) != NULL)
+    {
+        for (int i = 0; i < strlen(line); i++) 
+        {
+            line[i] = toupper(line[i]);
+        }
+        write(input, line, MAX);
+        printf("%s", line);
+    }
+
+    write(input, "Stop\n", MAX);
+    fclose(fd);
+    close(input);
     return 0;
 }
