@@ -34,13 +34,6 @@ int main(int argc, char *argv[])
     //open the file 
     FILE *fd = fopen(argv[1], "r");
 
-    //error checking on the file
-    if (input == -1) 
-    {
-        printf("There was a problem opening the file.");
-        exit(0);
-    }
-
     //reads the file and converts to upper case 
     while(fgets(line, MAX, fd) != NULL)
     {
