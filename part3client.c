@@ -28,39 +28,47 @@
 #include <string.h>
 #include <ctype.h>
 
-int main(int argc, char *argv[]) {
-    //Verify correct number of arguments 
-    if (argc != 2) {
-        printf("Please enter the correct number of arguments. Only need filename");
-        exit(1);
-    }
-    const int MAXLINE = 255;
-    char line[MAXLINE];
-    int input_fd;
-    char* pipe = "/tmp/part3";
+// Helper function to convert a string to upper case.
+//   Loops through the characters of a string and makes them uppercase
+void makeupper(char* str) {
+	while (*str) {
+		*str = toupper((unsigned char) *str);
+		str++;
+	}
+}
 
-    //Create Named Pipe
-    mkfifo(pipe,0666); 
+int main(int argc, char* argv[]) {
+	if (argc != 2) {
+		printf("Usage: %s file-to-read\n", argv[0]);
+		exit(1);
+	}
 
-    input_fd = open(pipe, O_WRONLY);
+	// Open the file to read from
+	FILE* sourceFile = fopen(argv[1], "r");
+	if (sourceFile == NULL) {
+		perror(argv[1]);
+		exit(1);
+	}
 
-    if (input_fd == -1) {
-        printf("Error opening file");
-        exit(0);
-    }
+	// Create & open the named pipe
+	char* fifo = "./fifo";
+	mkfifo(fifo, 0666);
 
-    FILE *fp = fopen(argv[1], "r");
+	int fd = open(fifo, O_WRONLY);
 
-    while(fgets(line, MAXLINE, fp) != NULL){
-        for (int i = 0; i < strlen(line); i++) {
-            line[i] = toupper(line[i]);
-        }
-        write(input_fd,line,MAXLINE);
-        printf("%s",line);
-    }
+	// Begin reading the lines from the source file
+	char* line;
+	size_t len = 0;
 
-    write(input_fd, "Stop\n", MAXLINE);
-    fclose(fp);
-    close(input_fd);
-    return 0;
+	while (getline(&line, &len, sourceFile) != -1) {
+		makeupper(line); // convert to uppercase
+		write(fd, line, len); // write to the pipe
+		sleep(1); //wait a sec
+	}
+
+	// We've read the whole file. Let's send a stop to the server, then close our pipe and file
+	write(fd, "Stop\n", 6);
+
+	close(fd);
+	fclose(sourceFile);
 }
