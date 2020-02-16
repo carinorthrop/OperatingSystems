@@ -16,24 +16,23 @@
 
 
 int main(int argc, char *argv[]) 
-{
-    //Check to make sure there are the right parameters 
+{    
+    const int MAX = 255;
+    char line[MAX];
     
-    const int MAXLINE = 255;
-    char line[MAXLINE];
-    int output_fd;
+    //create pipe
+    mkfifo(pipe, 0666); 
     char* pipe = "/tmp/part3";
-    
-    //Create Named Pipe
-    mkfifo(pipe,0666); 
 
-    output_fd = open(pipe, O_RDONLY);
+    int output = open(pipe, O_RDONLY);
 
     while(1)
     {
-        read(output_fd,line,sizeof(line));
-        printf("%s",line);
+        //read through content of the input
+        read(output, line, sizeof(line));
+        printf("%s", line);
 
+        //checks to see if client sent stop
         if(strcmp(line, "Stop\n") == 0)
         {
             break;
@@ -41,7 +40,7 @@ int main(int argc, char *argv[])
     }
 
     //close and remove the pipe
-    close(output_fd);
+    close(output);
     remove("tmp/myfifo");
     return 0;
 }
