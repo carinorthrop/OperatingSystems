@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 
     //modify the segment
     FILE *fp = fopen(argv[1], "r");
-    strncpy(data, fgets(line,MAXLINE,fp), SHM_SIZE);
+    strcpy(data, fgets(line,MAXLINE,fp));
     sleep(5);
 
     //convert to uppercase
@@ -68,11 +68,11 @@ int main(int argc, char *argv[])
     {
             line[i] = toupper(line[i]);
     }
-    strncpy(data, line, SHM_SIZE);
+    strcpy(data, line);
     sleep(5);
 
     //send stop over to server
-    strncpy(data, "STOP\n");
+    strcpy(data, "STOP\n");
 
     //detach from segment
     shmdt(data);
