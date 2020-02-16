@@ -26,9 +26,10 @@ int main(int argc, char *argv[])
     char line[MAX];
 
     //create the pipe
-    char* pipe = "/tmp/part3";
+    char* pipe = "/part3";
     mkfifo(pipe,0666); 
 
+    //opens the pipe
     int fd1 = open(pipe, O_WRONLY);
 
     //error checking opening the file
@@ -38,7 +39,15 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
+    //opens the second pipe
     FILE *fp2 = fopen(argv[1], "r");
+
+    //error checking opening the file
+    if (fd2 == NULL) 
+    {
+        printf("Error opening file");
+        exit(0);
+    }
 
     //convert the file contents to uppercase
     while(fgets(line, MAX, fp2) != 0)

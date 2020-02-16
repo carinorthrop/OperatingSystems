@@ -39,8 +39,8 @@ int main(int argc, char *argv[])
         }
     }
 
-    //close and remove the pie
+    //close and remove the pipe
     close(fd);
-    remove("tmp/myfifo");
+    remove("/myfifo");
     return 0;
 }
