@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
-    const int MAX = 300;
+    const int MAX = 255;
     char line[MAX];
     char* pipe = "/part3";
 

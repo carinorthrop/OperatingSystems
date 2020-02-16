@@ -16,29 +16,29 @@
 
 int main(int argc, char *argv[]) 
 {
-    const int MAX = 300;
-    char line[MAX];
-    
-    //create pipe 
+    const int MAXLINE = 255;
+    char line[MAXLINE];
+    int output_fd;
     char* pipe = "/part3";
+    
+    //Create Named Pipe
     mkfifo(pipe,0666); 
-    int output = open(pipe, O_RDONLY);
+
+    output_fd = open(pipe, O_RDONLY);
 
     while(1)
     {
-        //read through file
-        read(output, line, sizeof(line));
+        read(output_fd,line,sizeof(line));
         printf("%s",line);
-        
-        //check to see if client sent over stop
+
         if(!strcmp(line, "Stop\n"))
         {
             break;
         }
     }
 
-    //close and remove 
-    close(output);
+
+    close(output_fd);
     remove("/myfifo");
     return 0;
 }
