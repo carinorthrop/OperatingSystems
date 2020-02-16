@@ -24,7 +24,6 @@ int main(int argc, char *argv[])
     char* pipe = "/tmp/part3";
     mkfifo(pipe, 0666); 
     
-
     int output = open(pipe, O_RDONLY);
 
     while(1)
@@ -43,5 +42,6 @@ int main(int argc, char *argv[])
     //close and remove the pipe
     close(output);
     remove("tmp/myfifo");
+    
     return 0;
 }

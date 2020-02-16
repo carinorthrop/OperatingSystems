@@ -32,6 +32,7 @@ int main(int argc, char *argv[])
 
     int input = open(pipe, O_WRONLY);
 
+    //error checking opening file
     if (input == -1)
     {
         printf("There was a problem opening the file \n");
@@ -55,7 +56,8 @@ int main(int argc, char *argv[])
     write(input, "Stop\n", MAX);
 
     //close out pipe and file
-    fclose(fd);
     close(input);
+    fclose(fd);
+
     return 0;
 }
