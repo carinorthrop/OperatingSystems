@@ -15,41 +15,39 @@
 #include <fcntl.h>
 
 
-int main(int argc, char *argv[])
- {
-    //parameter checking
+int main(int argc, char *argv[]) {
+    //Verify correct number of arguments 
     if (argc != 2) {
-        printf("The correct parameters were not entered. Usage: file_name \n");
+        printf("Please enter the correct number of arguments. Only need filename");
+        exit(1);
+    }
+    const int MAXLINE = 255;
+    char line[MAXLINE];
+    int input_fd;
+    char* pipe = "/tmp/part3";
+
+    //Create Named Pipe
+    mkfifo(pipe,0666); 
+
+    input_fd = open(pipe, O_WRONLY);
+
+    if (input_fd == -1) {
+        printf("Error opening file");
         exit(0);
     }
 
-    const int MAX = 255;
-    char line[MAX];
-    char* pipe = "tmp/part3";
+    FILE *fp = fopen(argv[1], "r");
 
-    //create the named pipe
-    mkfifo(pipe, 0666); 
-    int input = open(pipe, O_WRONLY);
-
-    //open the file 
-    FILE *fd = fopen(argv[1], "r");
-
-    //reads the file and converts to upper case 
-    while(fgets(line, MAX, fd) != NULL)
-    {
-        for (int i = 0; i < strlen(line); i++) 
-        {
+    while(fgets(line, MAXLINE, fp) != NULL){
+        for (int i = 0; i < strlen(line); i++) {
             line[i] = toupper(line[i]);
         }
-        write(input, line, MAX);
-        printf("%s", line);
+        write(input_fd,line,MAXLINE);
+        printf("%s",line);
     }
 
-    //once the file is read send a stop to the server
-    write(input, "Stop\n", MAX);
-    
-    //close pipes and files 
-    close(input);
-    fclose(fd);
+    write(input_fd, "Stop\n", MAXLINE);
+    fclose(fp);
+    close(input_fd);
     return 0;
 }
