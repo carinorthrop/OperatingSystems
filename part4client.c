@@ -19,10 +19,13 @@
 const int SHM_SIZE = 1024;
 const char FILE_NAME[] = "testfile.txt";
 
-int main(int argc, char *argv[]){
-    //Verify correct number of arguments 
-    if (argc != 2) {
-        printf("Please enter the correct number of arguments. Only need filename");
+int main(int argc, char *argv[])
+
+{
+    //parameter checking
+    if (argc != 2) 
+    {
+        printf("The correct parameters were not entered. Usage: file_name");
         exit(1);
     }
     
@@ -33,29 +36,36 @@ int main(int argc, char *argv[]){
     const int MAXLINE = 255;
     char line[MAXLINE];
 
-    //Create Key
-    if ((key = ftok(FILE_NAME, 1)) == -1) {
+    //create a key
+    if ((key = ftok(FILE_NAME, 1)) == -1) 
+    {
         perror("ftok");
         exit(1);
     }
 
-    //Connect and make the segment 
-    if ((shmid = shmget(key, SHM_SIZE, 0644 | IPC_CREAT)) == -1) {
+    //connect and create segament
+    if ((shmid = shmget(key, SHM_SIZE, 0644 | IPC_CREAT)) == -1) 
+    {
         perror("shmget");
         exit(1);
     }
-    //attach to the segment to get a pointer to it
+    
+    //attach to segament
     data = shmat(shmid, (void *)0, 0);
-    if (data == (char *)(-1)) {
+    if (data == (char *)(-1)) 
+    {
         perror("shmat");
         exit(1);
     }
 
-    //modify the segment, based on the command line
+    //modify the segment
     FILE *fp = fopen(argv[1], "r");
     strncpy(data, fgets(line,MAXLINE,fp), SHM_SIZE);
     sleep(5);
-    for (int i = 0; i < strlen(line); i++) {
+
+    //convert to uppercase
+    for (int i = 0; i < strlen(line); i++) 
+    {
             line[i] = toupper(line[i]);
     }
     strncpy(data, line, SHM_SIZE);
@@ -63,9 +73,6 @@ int main(int argc, char *argv[]){
     strncpy(data, "STOP", SHM_SIZE);
 
     //detach from segment
-    if (shmdt(data) == -1) {
-        perror("shmdt");
-        exit(1);
-    }
+    shmdt(data);
     return 0;
 }
