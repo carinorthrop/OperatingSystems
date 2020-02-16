@@ -19,12 +19,13 @@ int main()
     int MAX = 80;
     char line[MAX];
 
-    //Finds all the files with .c 
+    //finds all the files with .c 
     FILE *fp1 = popen("find . -name '*.c'", "r");
 
-    //Makes files uppercase 
+    //makes files uppercase 
     FILE *fp2 = popen("tr 'a-z' 'A-Z'", "w");
     
+    //write to tr pipe 
     while (fgets(line, MAX, fp1) != 0)
     {
         fputs(&line[0], fp2);
