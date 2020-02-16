@@ -16,17 +16,14 @@
 
 int main() 
 {
-	int fdFind[2];
-	int fdTz[2];
-
-	const int BUFFSIZE = 100;
-	char buffer[BUFFSIZE];
-
-	FILE *fp = popen("find . -name '*.c'", "r");
-	FILE *fp2 = popen("tr a-z A-Z", "w");
-	while (fgets(buffer, BUFFSIZE, fp) != NULL) {
-		fputs(&buffer[0], fp2);
-	}
-	pclose(fp);
-	pclose(fp2);
+    int MAXLINE = 80;
+    char line[MAXLINE];
+    //Finds all the files with .c 
+    FILE *fp = popen("find . -name '*.c'", "w");
+    //Closes the file
+    pclose(fp);
+    //Finds all the files with .c and makes them uppercase 
+    FILE *fp1 = popen("find . -name '*.c' | tr 'a-z' 'A-Z'", "w");
+    //Closes the file
+    pclose(fp1);
 }
