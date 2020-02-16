@@ -14,32 +14,33 @@
 #include <string.h>
 #include <fcntl.h>
 
-int main(int argc, char *argv[]) {
-    //Check to make sure there are the right parameters 
+int main(int argc, char *argv[]) 
+{
     
-    const int MAXLINE = 255;
-    char line[MAXLINE];
-    int output_fd;
-    char* pipe = "/tmp/part3";
-    
-    //Create Named Pipe
+    //create pipe 
+    char* pipe = "/part3";
     mkfifo(pipe,0666); 
 
-    output_fd = open(pipe, O_RDONLY);
+    //open the file
+    int output = open(pipe, O_RDONLY);
+    const int MAX = 300;
+    char line[MAX];
 
-    if (output_fd == -1) {
-        printf("Error opening filepath");
-        exit(0);
-    }
-
-    while(1){
-        read(output_fd,line,sizeof(line));
+    while(1)
+    {
+        //read in
+        read(output, line, sizeof(line));
         printf("%s",line);
-        if(!strcmp(line, "Stop\n")){
+
+        //check to see if there is a stop from client 
+        if(strcmp(line, "Stop\n") == 0)
+        {
             break;
         }
     }
-    close(output_fd);
-    remove("tmp/myfifo");
+
+    //close and delete 
+    close(output);
+    remove("/myfifo");
     return 0;
 }

@@ -23,13 +23,12 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
-    const int MAX = 255;
+    const int MAX = 300;
     char line[MAX];
     char* pipe = "/part3";
 
     //create the named pipe
-    mkfifo(pipe,0666); 
-
+    mkfifo(pipe, 0666); 
     int input = open(pipe, O_WRONLY);
 
     //open the file 
@@ -42,7 +41,7 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
-
+    //reads the file and converts to upper case 
     while(fgets(line, MAX, fd) != NULL)
     {
         for (int i = 0; i < strlen(line); i++) 
@@ -53,8 +52,11 @@ int main(int argc, char *argv[])
         printf("%s", line);
     }
 
+    //once the file is read send a stop to the server
     write(input, "Stop\n", MAX);
-    fclose(fd);
+    
+    //close pipes and files 
     close(input);
+    fclose(fd);
     return 0;
 }
