@@ -24,9 +24,9 @@ int main(int argc, char *argv[])
     }
     else
     {
-        int child = (int) fork();
-        if (child == 0)
-        {
+   int child = (int) fork();
+    //Verify we have a child 
+    if (child == 0){
         //Open the file
         int fd = open(argv[2], O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
         //stdout to the file
@@ -38,7 +38,9 @@ int main(int argc, char *argv[])
         //execute the file
         execl(argv[1],argv[1], (char*)NULL);
         exit(0);
-        }
+    }else{
+        wait(NULL);
+    }
     }
     return 0;
 }
