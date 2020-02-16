@@ -24,29 +24,26 @@ int main(int argc, char *argv[])
     }
     else
     {
-        int child = fork();
-        if (child == -1)
-        {
-            printf("Error forking");
-            exit(0);
-        }
-            else if(child == 0)
-            {
-                //open the file
-                int fd = open(argv[2], O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
-
-                //send stdout to the file
-                dup2(fd, 1);
-
-                //send stderr to the file
-                dup2(fd, 2);
-
-                //close the file
-                close(fd);
-
-                //execute the file
-                execl(argv[1], argv[1], (char*)0);
-            }
+   int child = (int) fork();
+    //Verify we have a child 
+    if (child == -1){
+        printf("Error forking");
+        exit(0);
+    }else if (child == 0){
+        //Open the file
+        int fd = open(argv[2], O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+        //stdout to the file
+        dup2(fd, 1);
+        //stderr to the file
+        dup2(fd, 2);
+        //close fd
+        close(fd);
+        //execute the file
+        execl(argv[1],argv[1], (char*)NULL);
+        exit(0);
+    }else{
+        wait(NULL);
+    }
     }
     return 0;
 }
