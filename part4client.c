@@ -70,9 +70,12 @@ int main(int argc, char *argv[])
     }
     strncpy(data, line, SHM_SIZE);
     sleep(5);
-    strncpy(data, "STOP", SHM_SIZE);
+
+    //send stop over to server
+    strncpy(data, "STOP\n");
 
     //detach from segment
     shmdt(data);
+
     return 0;
 }
