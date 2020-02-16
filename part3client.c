@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 
     const int MAX = 255;
     char line[MAX];
-    char* pipe = "/part3";
+    char* pipe = "tmp/part3";
 
     //create the named pipe
     mkfifo(pipe, 0666); 

@@ -21,12 +21,18 @@ int main(int argc, char *argv[]) {
     const int MAXLINE = 255;
     char line[MAXLINE];
     int output_fd;
-    char* pipe = "/part3";
+    char* pipe = "/tmp/part3";
     
     //Create Named Pipe
     mkfifo(pipe,0666); 
 
     output_fd = open(pipe, O_RDONLY);
+
+    if (output_fd == -1) {
+        printf("Error opening filepath");
+        exit(0);
+    }
+
     while(1){
         read(output_fd,line,sizeof(line));
         printf("%s",line);
@@ -35,6 +41,6 @@ int main(int argc, char *argv[]) {
         }
     }
     close(output_fd);
-    remove("/myfifo");
+    remove("tmp/myfifo");
     return 0;
 }
