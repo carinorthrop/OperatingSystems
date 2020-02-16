@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
             printf("Error forking");
             exit(0);
         }
-            else (child == 0)
+            else if(child == 0)
             {
                 //open the file
                 int fd = open(argv[2], O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
