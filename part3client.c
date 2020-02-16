@@ -14,57 +14,53 @@
 #include <string.h>
 #include <fcntl.h>
 
-int main(int argc, char *argv[]) 
-{
-    //parameter checking
+//Ashley Wilhelm 
+//Homework 2: Part 3 Client
+
+#include <sys/types.h>
+#include <sys/stat.h>   
+#include <unistd.h>   
+#include <fcntl.h>
+#include <stdio.h>
+#include <sys/mman.h>
+#include <stdlib.h>   
+#include <errno.h>
+#include <string.h>
+#include <ctype.h>
+
+int main(int argc, char *argv[]) {
+    //Verify correct number of arguments 
     if (argc != 2) {
-        printf("The correct parameters were not entered. Usage: file_name \n");
-        exit(0);
+        printf("Please enter the correct number of arguments. Only need filename");
+        exit(1);
     }
+    const int MAXLINE = 255;
+    char line[MAXLINE];
+    int input_fd;
+    char* pipe = "/tmp/part3";
 
-    const int MAX = 255;
-    char line[MAX];
-
-    //create the pipe
-    char* pipe = "/part3";
+    //Create Named Pipe
     mkfifo(pipe,0666); 
 
-    //opens the pipe
-    int fd1 = open(pipe, O_WRONLY);
+    input_fd = open(pipe, O_WRONLY);
 
-    //error checking opening the file
-    if (fd1 == NULL) 
-    {
+    if (input_fd == -1) {
         printf("Error opening file");
         exit(0);
     }
 
-    //opens the second pipe
-    FILE *fd2 = fopen(argv[1], "r");
+    FILE *fp = fopen(argv[1], "r");
 
-    //error checking opening the file
-    if (fd2 == NULL) 
-    {
-        printf("Error opening file");
-        exit(0);
-    }
-
-    //convert the file contents to uppercase
-    while(getline(line, MAX, fd2) != 0)
-    {
-        for (int i = 0; i < strlen(line); i++) 
-        {
+    while(fgets(line, MAXLINE, fp) != NULL){
+        for (int i = 0; i < strlen(line); i++) {
             line[i] = toupper(line[i]);
         }
-        write(fd1, line, MAX);
-        //printf("%x", line);
+        write(input_fd,line,MAXLINE);
+        printf("%s",line);
     }
 
-    //send stop over to the server
-    write(fd1, "Stop\n", MAX);
-    
-    //close the pipes
-    close(fd1);
-    fclose(fd2);
+    write(input_fd, "Stop\n", MAXLINE);
+    fclose(fp);
+    close(input_fd);
     return 0;
 }
