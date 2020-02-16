@@ -13,41 +13,38 @@
 #include <string.h>
 #include <fcntl.h>
 
+int main(int argc, char *argv[])
+ {
+    //parameter checking  
+    if (argc != 3)
+    {
+        printf("The correct parameters were not entered. Usage: program_name file_name \n");
+        exit(0);
 
-void processes(char* programname, char* filename){
-    int child = (int) fork();
-    //Verify we have a child 
-    if (child == -1){
-        printf("Error forking");
-        exit(0);
-    }else if (child == 0){
-        //Open the file
-        int fd = open(filename, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
-        //stdout to the file
-        dup2(fd, 1);
-        //stderr to the file
-        dup2(fd, 2);
-        //close fd
-        close(fd);
-        //execute the file
-        execl(programname,programname, (char*)NULL);
-        exit(0);
-    }else{
-        wait(NULL);
     }
-}
+    else
+    {
+        int child = fork();
+        if (child == -1)
+        {
+            printf("Error forking");
+            exit(0);
+        }
+            else (child == 0)
+            {
+                //open the file
+                int fd = open(argv[2], O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
 
-int main(int argc, char *argv[]) {
-    //Check to make sure there are the right parameters 
-    if (argc > 3){
-        printf("Too many parameters please only enter program name and a file name.\n");
-        exit(0);
-    }else if(argc < 3){
-        printf("Please enter a program name and a file name when calling program \n");
-        exit(0);
-    }else{
-        //Call function
-        processes(argv[1], argv[2]);
+                //send stdout to the file
+                dup2(fd, 1);
+
+                //close the file
+                close(fd);
+
+                //execute the file
+                execl(argv[1], argv[1], (char*)NULL);
+                exit(0);
+            }
     }
     return 0;
 }
