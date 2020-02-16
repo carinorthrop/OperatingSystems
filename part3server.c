@@ -27,12 +27,6 @@ int main(int argc, char *argv[]) {
     mkfifo(pipe,0666); 
 
     output_fd = open(pipe, O_RDONLY);
-
-    if (output_fd == -1) {
-        printf("Error opening filepath");
-        exit(0);
-    }
-
     while(1){
         read(output_fd,line,sizeof(line));
         printf("%s",line);
