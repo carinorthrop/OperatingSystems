@@ -32,9 +32,9 @@ int main(int argc, char *argv[])
 
     int input = open(pipe, O_WRONLY);
 
-    if (input == NULL)
+    if (input == -1)
     {
-        printf("Error opening file");
+        printf("There was a problem opening the file \n");
         exit(0);
     }
 
