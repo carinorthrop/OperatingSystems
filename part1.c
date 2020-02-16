@@ -38,6 +38,9 @@ int main(int argc, char *argv[])
                 //send stdout to the file
                 dup2(fd, 1);
 
+                //send stderr to the file
+                dup2(fd, 2);
+
                 //close the file
                 close(fd);
 
