@@ -14,8 +14,10 @@
 #include <string.h>
 #include <fcntl.h>
 
-int main(int argc, char *argv[]) 
-{
+
+int main(int argc, char *argv[]) {
+    //Check to make sure there are the right parameters 
+    
     const int MAXLINE = 255;
     char line[MAXLINE];
     int output_fd;
@@ -26,18 +28,18 @@ int main(int argc, char *argv[])
 
     output_fd = open(pipe, O_RDONLY);
 
-    while(1)
-    {
+    if (output_fd == -1) {
+        printf("Error opening filepath");
+        exit(0);
+    }
+
+    while(1){
         read(output_fd,line,sizeof(line));
         printf("%s",line);
-
-        if(!strcmp(line, "Stop\n"))
-        {
+        if(!strcmp(line, "Stop\n")){
             break;
         }
     }
-
-
     close(output_fd);
     remove("/myfifo");
     return 0;
