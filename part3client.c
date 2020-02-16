@@ -50,14 +50,14 @@ int main(int argc, char *argv[])
     }
 
     //convert the file contents to uppercase
-    while(fgets(line, MAX, fd2) != 0)
+    while(getline(line, MAX, fd2) != 0)
     {
         for (int i = 0; i < strlen(line); i++) 
         {
             line[i] = toupper(line[i]);
         }
         write(fd1, line, MAX);
-        printf("%x", line);
+        //printf("%x", line);
     }
 
     //send stop over to the server
