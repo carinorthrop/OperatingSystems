@@ -50,7 +50,7 @@ int main()
     while ( (n < 10) && (strcmp(data, "STOP") != 0) )
     {
         printf("%s", data);
-        sleep(5);   /* Sleep 5 seconds) */
+        sleep(1);   /* Sleep 5 seconds) */
         n++;
     }
 
