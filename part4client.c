@@ -19,9 +19,9 @@
 const int SHM_SIZE = 1024;
 const char FILE_NAME[] = "testfile.txt";
 
-//parameter checking
 int main(int argc, char* argv[])
  {
+    //parameter checking
 	if (argc != 2) 
     {
 		printf("The correct parameters were not entered. Usage: file_name");
@@ -53,16 +53,17 @@ int main(int argc, char* argv[])
         exit(1);
     }
 
-	// Create a reference for where to store the string
-	char* str = (char *)data + sizeof(int);
-	*data = 0;
-
 	// Open the text file
 	FILE* sourceFile = fopen(argv[1], "r");
-	if (sourceFile == NULL) {
+	if (sourceFile == NULL) 
+    {
 		perror(argv[1]);
 		exit(1);
 	}
+
+    // Create a reference for where to store the string
+	char* str = (char *)data + sizeof(int);
+	*data = 0;
 
 	// Begin reading the lines from the source file
 	char* line;
@@ -74,16 +75,18 @@ int main(int argc, char* argv[])
         {
             line[i] = toupper(line[i]);
         }       
-		strcpy(str, line); //move the line to the memory for the string
-		(*data)++; // update the count
+		strcpy(str, line);
+		//(*data)++; 
         printf("%s", line);
 		sleep(1);
 	}
 
 	// Send signal to the server to die
 	strcpy(str, "Stop\n");
-	(*data)++;
+	//(*data)++;
 
 	// Detach segments
 	shmdt(str);
+    
+    return 0;
 }
