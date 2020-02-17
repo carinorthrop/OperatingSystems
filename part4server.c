@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
         sleep(5);
         x++;
 
-        if(strcmp(line, "Stop\n") == 0)
+        if(strcmp(data, "Stop\n") == 0)
         {
             break;
         }
