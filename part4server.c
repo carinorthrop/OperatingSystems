@@ -46,12 +46,19 @@ int main(int argc, char *argv[])
     }
 
     //go through segament 
-    int x = 0;
-    while ((x < 1000) && (strcmp(data, "Stop\n") != 0))
+    char* str = (char *)data + sizeof(int);
+	int old = *data;
+
+    while (1)
     {
         printf("%s", data);
         sleep(5);
-        x++;
+
+        //checks to see if client sent stop
+        if(strcmp(str, "Stop\n") == 0)
+        {
+            break;
+        }
     }
 
     //delete memory 
