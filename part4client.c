@@ -65,9 +65,9 @@ int main(int argc, char *argv[])
         perror(argv[1]);
         exit(1);
     }
-    
+
     char *line;
-    int length= 0;
+    size_t length= 0;
     //convert to uppercase and read in file
     while(getline(&line, &length, fp) != -1)
     {
