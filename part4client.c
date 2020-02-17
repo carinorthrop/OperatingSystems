@@ -66,9 +66,10 @@ int main(int argc, char *argv[])
 
     char *line;
     size_t length= 0;
-    //convert to uppercase and read in file
+    //read in 
     while(getline(&line, &length, fp) != -1)
     {
+        //convert to uppercase
         for (int i = 0; i < strlen(line); i++) 
         {
             line[i] = toupper(line[i]);

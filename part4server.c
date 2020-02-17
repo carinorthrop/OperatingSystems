@@ -47,18 +47,11 @@ int main(int argc, char *argv[])
 
     //go through segament 
     int x = 0;
-    while ((x < 10) && (strcmp(data, "Stop\n") != 0))
+    while ((x < 1000) && (strcmp(data, "Stop\n") != 0))
     {
         printf("%s", data);
         sleep(5);
         x++;
-    }
-
-    //detach memory 
-    if (shmdt(data) == -1) 
-    {
-        perror("shmdt");
-        exit(1);
     }
 
     //delete memory 
