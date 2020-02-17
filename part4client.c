@@ -30,8 +30,6 @@ int main(int argc, char *argv[])
     }
     
     int n;
-    const int MAX = 300;
-    char line[MAX];
 
     //create a key
     key_t key;
