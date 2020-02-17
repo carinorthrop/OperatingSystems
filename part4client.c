@@ -75,14 +75,14 @@ int main(int argc, char* argv[])
             line[i] = toupper(line[i]);
         }       
 		strcpy(str, line); //move the line to the memory for the string
-		(*count)++; // update the count
+		(*data)++; // update the count
         printf("%s", line);
 		sleep(1);
 	}
 
 	// Send signal to the server to die
 	strcpy(str, "Stop\n");
-	(*count)++;
+	(*data)++;
 
 	// Detach segments
 	shmdt(str);
