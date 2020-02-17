@@ -80,31 +80,6 @@ int main(int argc, char *argv[])
 
 		sleep(1);
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-    char *line;
-    size_t length= 0;
-    //read in 
-    while(getline(&line, &length, fp) != -1)
-    {
-        //convert to uppercase
-        for (int i = 0; i < strlen(line); i++) 
-        {
-            line[i] = toupper(line[i]);
-            strncpy(data, line, SHM_SIZE);
-        }
-           sleep(1);
-    }
     
     //send stop over to server
     strcpy(data, "Stop\n");
