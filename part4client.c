@@ -17,7 +17,7 @@
 #include <sys/types.h>
 
 const int SHM_SIZE = 1024;
-const char FILENAME[] = "testfile.txt";
+const char FILE_NAME[] = "testfile.txt";
 
 //parameter checking
 int main(int argc, char* argv[])
