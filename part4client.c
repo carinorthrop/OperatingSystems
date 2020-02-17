@@ -65,8 +65,8 @@ int main(int argc, char *argv[])
     }
 
 
-	char* str = (char *)fp + sizeof(int);
-	*fp = 0;
+	char* str = (char *)data + sizeof(int);
+	*data = 0;
 	char* line;
 	size_t len = 0;
 
