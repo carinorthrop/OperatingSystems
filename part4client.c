@@ -68,8 +68,12 @@ int main(int argc, char* argv[])
 	char* line;
 	size_t len = 0;
 
-	while (getline(&line, &len, sourceFile) != -1) {
-		makeupper(line); // convert to uppercase
+	while (getline(&line, &len, sourceFile) != -1) 
+    {
+		for (int i = 0; i < strlen(line); i++) 
+        {
+            line[i] = toupper(line[i]);
+        }       
 		strcpy(str, line); //move the line to the memory for the string
 		(*count)++; // update the count
         printf("%s", line);
