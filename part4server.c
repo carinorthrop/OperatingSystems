@@ -45,19 +45,24 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    //go through segament 
-    int x = 0;
-    while ((x < 100) && (strcmp(data, "Stop\n") != 0))
-    {
-        printf("%s", data);
-        sleep(5);
-        x++;
+	// Reference to the string
+	char* str = (char *)data + sizeof(int);
 
-        if(strcmp(data, "Stop\n") == 0)
-        {
-            break;
-        }
-    }
+	// Begin reading the segments
+	int old = *data;
+	while (1) {
+		// If the integer count changes
+		if (old != *data) {
+			old = *data; // update the count
+
+			printf("%s", str); // print the string
+
+			// If it's a stop, then let's get out of the loop
+			if (strcmp(str, "Stop\n") == 0) {
+				break;
+			}
+		}
+	}
 
     //delete memory 
     shmctl(shmid, IPC_RMID, NULL);
