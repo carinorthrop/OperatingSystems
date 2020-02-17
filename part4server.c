@@ -20,41 +20,52 @@ const char FILE_NAME[] = "testfile.txt";
 
 int main(int argc, char *argv[])
 {
+    //create a key 
     key_t key;
-    int shmid;
-    char *data;
-    int n;
-
-    //Create Key
-    if ((key = ftok(FILE_NAME, 1)) == -1) {
+    if ((key = ftok(FILE_NAME, 1)) == -1) 
+    {
         perror("ftok");
         exit(1);
     }
 
-    //connect to (and possibly create) the segment:
-    if ((shmid = shmget(key, SHM_SIZE, 0644 | IPC_CREAT)) == -1) {
+    //connect and create shared memory space 
+    int shmid;
+    if ((shmid = shmget(key, SHM_SIZE, 0644 | IPC_CREAT)) == -1) 
+    {
         perror("shmget");
         exit(1);
     }
-    //attach to the segment to get a pointer to it
+
+    //attach memory
+    char *data;
     data = shmat(shmid, (void *)0, 0);
-    if (data == (char *)(-1)) {
+    if (data == (char *)(-1)) 
+    {
         perror("shmat");
         exit(1);
     }
+
     //Read the segment
-    n = 0;
-    while ( (n < 10) && (strcmp(data, "STOP") != 0) )
+    int n = 0;
+    while (1)
     {
-        printf("segment contains: \"%s\"\n", data);
-        sleep(5);   /* Sleep 5 seconds) */
+        printf("%s\n", data);
+        sleep(5); 
         n++;
+
+        //checks to see if there is a stop from client 
+        if(strcmp(data, "Stop\n") == 0)
+        {
+            break;
+        }
     }
+    
     //detach from the segment
     if (shmdt(data) == -1) {
         perror("shmdt");
         exit(1);
     }
+
     //Delete the structure 
     shmctl(shmid, IPC_RMID, NULL);
     return 0;
