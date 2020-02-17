@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
         printf("The correct parameters were not entered. Usage: file_name");
         exit(1);
     }
-    const int MAX = 255;
+    const int MAX = 300;
     char line[MAX];
 
     //create the pipe
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
         printf("%s", line);
     }
 
-    //send stop over to server
+    //once input has been read and converted to uppercase, send stop over to server
     write(input, "Stop\n", MAX);
 
     //close out pipe and file

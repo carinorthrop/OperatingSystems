@@ -17,7 +17,7 @@
 
 int main(int argc, char *argv[]) 
 {    
-    const int MAX = 255;
+    const int MAX = 300;
     char line[MAX];
     
     //create pipe
@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
     
     int output = open(pipe, O_RDONLY);
 
+    //create loop until client sends stop
     while(1)
     {
         //read through content of the input
@@ -42,6 +43,6 @@ int main(int argc, char *argv[])
     //close and remove the pipe
     close(output);
     remove("tmp/myfifo");
-    
+
     return 0;
 }
