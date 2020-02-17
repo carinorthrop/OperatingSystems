@@ -29,21 +29,20 @@ int main(int argc, char *argv[])
         exit(1);
     }
     
-    key_t key;
-    int shmid;
-    char *data;
     int n;
-    const int MAXLINE = 255;
-    char line[MAXLINE];
+    const int MAX = 300;
+    char line[MAX];
 
     //create a key
+    key_t key;
     if ((key = ftok(FILE_NAME, 1)) == -1) 
     {
         perror("ftok");
         exit(1);
     }
 
-    //connect and create segament
+    //connect and create shared memory space 
+    int shmid;
     if ((shmid = shmget(key, SHM_SIZE, 0644 | IPC_CREAT)) == -1) 
     {
         perror("shmget");
@@ -51,28 +50,37 @@ int main(int argc, char *argv[])
     }
     
     //attach to segament
-    data = shmat(shmid, (void *)0, 0);
+    char *data;
+    data = (char *)shmat(shmid, (void *)0, 0);
     if (data == (char *)(-1)) 
     {
         perror("shmat");
         exit(1);
     }
 
-    //modify the segment
+    //open the file
     FILE *fp = fopen(argv[1], "r");
-    strncpy(data, fgets(line,MAXLINE,fp), SHM_SIZE);
-    sleep(5);
-
-    //convert to uppercase
-    for (int i = 0; i < strlen(line); i++) 
+    if (fp == NULL)
     {
-            line[i] = toupper(line[i]);
+        perror(argv[1]);
+        exit(1);
     }
-    strncpy(data, line, SHM_SIZE);
-    sleep(5);
-
+    
+    char *line;
+    int length= 0;
+    //convert to uppercase and read in file
+    while(getline(&line, &length, fp) != -1)
+    {
+        for (int i = 0; i < strlen(line); i++) 
+        {
+            line[i] = toupper(line[i]);
+            strncpy(data, line, SHM_SIZE);
+        }
+           sleep(1);
+    }
+    
     //send stop over to server
-    strncpy(data, "STOP", SHM_SIZE);
+    strncpy(data, "Stop\n", SHM_SIZE);
 
     //detach from segment
     shmdt(data);
