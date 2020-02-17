@@ -33,11 +33,12 @@ int main(int argc, char *argv[])
     int input = open(pipe, O_WRONLY);
 
     //error checking opening file
+    /*
     if (input == -1)
     {
         printf("There was a problem opening the file \n");
         exit(0);
-    }
+    }*/
 
     FILE *fd = fopen(argv[1], "r");
 
