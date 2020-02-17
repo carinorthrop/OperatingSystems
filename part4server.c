@@ -47,16 +47,10 @@ int main(int argc, char *argv[])
 
     //go through segament 
     int x = 0;
-    while (1 && x < 10)
+    while ((!strcmp(data, "Stop\n")) == 0 && (x < 10))
     {
         printf("%s", data);
         x++;
-
-        //checks to see if there is a stop from client 
-        if(strcmp(data, "Stop\n") == 0)
-        {
-            break;
-        }
     }
 
     //detach memory 
