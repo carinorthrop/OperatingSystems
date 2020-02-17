@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
 		makeupper(line); // convert to uppercase
 		strcpy(str, line); //move the line to the memory for the string
 		(*count)++; // update the count
-
+        printf("%s", line);
 		sleep(1);
 	}
 
