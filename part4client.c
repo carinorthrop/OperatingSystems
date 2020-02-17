@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
         exit(1);
     }
 
-	// Open the text file
+	//open file 
 	FILE* sourceFile = fopen(argv[1], "r");
 	if (sourceFile == NULL) 
     {
@@ -61,31 +61,31 @@ int main(int argc, char* argv[])
 		exit(1);
 	}
 
-    // Create a reference for where to store the string
+    
 	char* str = (char *)data + sizeof(int);
 	*data = 0;
-
-	// Begin reading the lines from the source file
 	char* line;
-	size_t len = 0;
+	size_t length = 0;
 
-	while (getline(&line, &len, sourceFile) != -1) 
+    //read in input file 
+	while (getline(&line, &length, sourceFile) != -1) 
     {
+        //conver to uppercase 
 		for (int i = 0; i < strlen(line); i++) 
         {
             line[i] = toupper(line[i]);
         }       
 		strcpy(str, line);
-		//(*data)++; 
+		(*data)++; 
         printf("%s", line);
 		sleep(1);
 	}
 
-	// Send signal to the server to die
+	//send stop singal to client 
 	strcpy(str, "Stop\n");
-	//(*data)++;
+	(*data)++;
 
-	// Detach segments
+	//detach
 	shmdt(str);
     
     return 0;

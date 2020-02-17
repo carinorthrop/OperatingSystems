@@ -46,13 +46,25 @@ int main()
         exit(1);
     }
 
-    int n = 0;
-    while ( (n < 10) && (strcmp(data, "STOP") != 0) )
+    //read in contents from file 
+	char* str = (char *)data + sizeof(int);
+	int old = *data;
+	while (1) 
     {
-        printf("%s", data);
-        sleep(1);   /* Sleep 5 seconds) */
-        n++;
-    }
+		// If the integer count changes
+		if (old != *data) 
+        {
+			old = *data; // update the count
+
+			printf("%s", str); // print the string
+
+			// listening for stop from client 
+			if (strcmp(str, "Stop\n") == 0)
+             {
+				break;
+			}
+		}
+	}
 
 	//delete 
 	shmctl(shmid, IPC_RMID, NULL);
