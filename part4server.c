@@ -50,6 +50,7 @@ int main(int argc, char *argv[])
     while ((x < 10) && (strcmp(data, "Stop\n") != 0))
     {
         printf("%s", data);
+        sleep(5);
         x++;
     }
 
