@@ -16,76 +16,57 @@
 #include <fcntl.h>
 #include <sys/types.h>
 
+
 const int SHM_SIZE = 1024;
 const char FILE_NAME[] = "testfile.txt";
 
-int main(int argc, char *argv[])
-
-{
-    //parameter checking
-    if (argc != 2) 
-    {
-        printf("The correct parameters were not entered. Usage: file_name");
+int main(int argc, char *argv[]){
+    //Verify correct number of arguments 
+    if (argc != 2) {
+        printf("Please enter the correct number of arguments. Only need filename");
         exit(1);
     }
     
-    int n;
-
-    //create a key
     key_t key;
-    if ((key = ftok(FILE_NAME, 1)) == -1) 
-    {
+    int shmid;
+    char *data;
+    int n;
+    const int MAXLINE = 255;
+    char line[MAXLINE];
+
+    //Create Key
+    if ((key = ftok(FILE_NAME, 1)) == -1) {
         perror("ftok");
         exit(1);
     }
 
-    //connect and create shared memory space 
-    int shmid;
-    if ((shmid = shmget(key, SHM_SIZE, 0644 | IPC_CREAT)) == -1) 
-    {
+    //Connect and make the segment 
+    if ((shmid = shmget(key, SHM_SIZE, 0644 | IPC_CREAT)) == -1) {
         perror("shmget");
         exit(1);
     }
-    
-    //attach to segament
-    char *data;
-    data = (char *)shmat(shmid, (void *)0, 0);
-    if (data == (char *)(-1)) 
-    {
+    //attach to the segment to get a pointer to it
+    data = shmat(shmid, (void *)0, 0);
+    if (data == (char *)(-1)) {
         perror("shmat");
         exit(1);
     }
 
-    //open the file
+    //modify the segment, based on the command line
     FILE *fp = fopen(argv[1], "r");
-    if (fp == NULL)
-    {
-        perror(argv[1]);
-        exit(1);
-    }
-
-
-	char* str = (char *)data + sizeof(int);
-	*data = 0;
-	char* line;
-	size_t len = 0;
-
-	while (getline(&line, &len, fp) != -1) {
-		for (int i = 0; i < strlen(line); i++) 
-        {
+    strncpy(data, fgets(line,MAXLINE,fp), SHM_SIZE);
+    sleep(5);
+    for (int i = 0; i < strlen(line); i++) {
             line[i] = toupper(line[i]);
-            strncpy(data, line, SHM_SIZE);
-        }
-		strcpy(str, line); //move the line to the memory for the string
-
-		sleep(1);
-	}
-    
-    //send stop over to server
-    strcpy(data, "Stop\n");
+    }
+    strncpy(data, line, SHM_SIZE);
+    sleep(5);
+    strncpy(data, "Stop", SHM_SIZE);
 
     //detach from segment
-    shmdt(data);
-
+    if (shmdt(data) == -1) {
+        perror("shmdt");
+        exit(1);
+    }
     return 0;
 }
