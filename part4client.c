@@ -64,6 +64,34 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
+
+	char* str = (char *)fp + sizeof(int);
+	*fp = 0;
+	char* line;
+	size_t len = 0;
+
+	while (getline(&line, &len, fp) != -1) {
+		for (int i = 0; i < strlen(line); i++) 
+        {
+            line[i] = toupper(line[i]);
+            strncpy(data, line, SHM_SIZE);
+        }
+		strcpy(str, line); //move the line to the memory for the string
+
+		sleep(1);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
     char *line;
     size_t length= 0;
     //read in 
