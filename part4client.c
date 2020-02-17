@@ -16,44 +16,42 @@
 #include <fcntl.h>
 #include <sys/types.h>
 
-// Helper function to convert a string to upper case.
-//   Loops through the characters of a string and makes them uppercase
-void makeupper(char* str) {
-	while (*str) {
-		*str = toupper((unsigned char) *str);
-		str++;
-	}
-}
+const int SHM_SIZE = 1024;
+const char FILENAME[] = "testfile.txt";
 
-int main(int argc, char* argv[]) {
-	if (argc != 2) {
-		printf("Usage: %s file-to-read\n", argv[0]);
+//parameter checking
+int main(int argc, char* argv[])
+ {
+	if (argc != 2) 
+    {
+		printf("The correct parameters were not entered. Usage: file_name");
 		exit(1);
 	}
 
-	const int SHM_SIZE = 1024;
-	const char FILENAME[] = "testfile.txt";
+    //create a key
+    key_t key;
+    if ((key = ftok(FILE_NAME, 1)) == -1) 
+    {
+        perror("ftok");
+        exit(1);
+    }
 
-	// Generate a key
-	key_t key = ftok(FILENAME, 1);
-	if (key == -1) {
-		perror("ftok");
-		exit(1);
-	}
+	//make segament
+    int shmid;
+    if ((shmid = shmget(key, SHM_SIZE, 0644 | IPC_CREAT)) == -1) 
+    {
+        perror("shmget");
+        exit(1);
+    }
 
-	// Connect to and create the shared memory space
-	int shmid = shmget(key, SHM_SIZE, 0644|IPC_CREAT);
-	if (shmid == -1) {
-		perror("shmget");
-		exit(1);
-	}
-
-	// Attach to memory segment
-	int* count = (int *)shmat(shmid, (void *)0, 0);
-	if (count == (int *)-1) {
-		perror("shmat");
-		exit(1);
-	}
+	//attach to memory
+    char *data;
+    data = shmat(shmid, (void *)0, 0);
+    if (data == (char *)(-1)) 
+    {
+        perror("shmat");
+        exit(1);
+    }
 
 	// Create a reference for where to store the string
 	char* str = (char *)count + sizeof(int);
