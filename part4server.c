@@ -17,7 +17,7 @@
 
 int main() {
 	const int SHM_SIZE = 1024;
-	const char FILENAME[] = "shm.dat";
+	const char FILENAME[] = "testfile.txt";
 
 	// Generate a key
 	key_t key = ftok(FILENAME, 1);
