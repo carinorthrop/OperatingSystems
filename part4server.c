@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
     //go through segament 
     int x = 0;
-    while ((!strcmp(data, "Stop\n")) == 0 && (x < 10))
+    while ((x < 10) && (strcmp(data, "Stop\n") !== 0))
     {
         printf("%s", data);
         x++;
