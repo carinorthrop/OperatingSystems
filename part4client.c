@@ -54,8 +54,8 @@ int main(int argc, char* argv[])
     }
 
 	// Create a reference for where to store the string
-	char* str = (char *)count + sizeof(int);
-	*count = 0;
+	char* str = (char *)data + sizeof(int);
+	*data = 0;
 
 	// Open the text file
 	FILE* sourceFile = fopen(argv[1], "r");
