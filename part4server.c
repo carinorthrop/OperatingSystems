@@ -45,13 +45,12 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    //Read the segment
-    int n = 0;
-    while (1)
+    //go through segament 
+    int x = 0;
+    while (1 && x < 10)
     {
-        printf("%s\n", data);
-        sleep(5); 
-        n++;
+        printf("%s", data);
+        x++;
 
         //checks to see if there is a stop from client 
         if(strcmp(data, "Stop\n") == 0)
@@ -59,14 +58,15 @@ int main(int argc, char *argv[])
             break;
         }
     }
-    
-    //detach from the segment
-    if (shmdt(data) == -1) {
+
+    //detach memory 
+    if (shmdt(data) == -1) 
+    {
         perror("shmdt");
         exit(1);
     }
 
-    //Delete the structure 
+    //delete memory 
     shmctl(shmid, IPC_RMID, NULL);
     return 0;
 }
