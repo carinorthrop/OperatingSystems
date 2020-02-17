@@ -14,47 +14,51 @@
 #include <string.h>
 #include <fcntl.h>
 #include <sys/types.h>
-const int SHM_SIZE = 1024;  
-const char FILE_NAME[] = "testfile.txt";
 
-int main(int argc, char *argv[])
-{
-    key_t key;
-    int shmid;
-    char *data;
-    int n;
+int main() {
+	const int SHM_SIZE = 1024;
+	const char FILENAME[] = "shm.dat";
 
-    //Create Key
-    if ((key = ftok(FILE_NAME, 1)) == -1) {
-        perror("ftok");
-        exit(1);
-    }
+	// Generate a key
+	key_t key = ftok(FILENAME, 1);
+	if (key == -1) {
+		perror("ftok");
+		exit(1);
+	}
 
-    //connect to (and possibly create) the segment:
-    if ((shmid = shmget(key, SHM_SIZE, 0644 | IPC_CREAT)) == -1) {
-        perror("shmget");
-        exit(1);
-    }
-    //attach to the segment to get a pointer to it
-    data = shmat(shmid, (void *)0, 0);
-    if (data == (char *)(-1)) {
-        perror("shmat");
-        exit(1);
-    }
-    //Read the segment
-    n = 0;
-    while ( (n < 10) && (strcmp(data, "STOP") != 0) )
-    {
-        printf("%s", data);
-        sleep(5);   /* Sleep 5 seconds) */
-        n++;
-    }
-    //detach from the segment
-    if (shmdt(data) == -1) {
-        perror("shmdt");
-        exit(1);
-    }
-    //Delete the structure 
-    shmctl(shmid, IPC_RMID, NULL);
-    return 0;
+	// Connect to and create the shared memory space
+	int shmid = shmget(key, SHM_SIZE, 0644|IPC_CREAT);
+	if (shmid == -1) {
+		perror("shmget");
+		exit(1);
+	}
+
+	// Attach to memory segment
+	int* count = (int *)shmat(shmid, (void *)0, 0);
+	if (count == (int *)-1) {
+		perror("shmat");
+		exit(1);
+	}
+
+	// Reference to the string
+	char* str = (char *)count + sizeof(int);
+
+	// Begin reading the segments
+	int old = *count;
+	while (1) {
+		// If the integer count changes
+		if (old != *count) {
+			old = *count; // update the count
+
+			printf("%s", str); // print the string
+
+			// If it's a stop, then let's get out of the loop
+			if (strcmp(str, "Stop\n") == 0) {
+				break;
+			}
+		}
+	}
+
+	// Delete the memory segments
+	shmctl(shmid, IPC_RMID, NULL);
 }
