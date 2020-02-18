@@ -52,21 +52,27 @@ int main(int argc, char * argv[])
         exit(1);
     }
        
-    msg = (char*) tmp + 4;
+	char* str = (char *)tmp + sizeof(int);
+	*tmp = 0;
 
-    // mmap input
-    while(fgets(line, MAXLINE, fp) != NULL) {
-        for (int i = 0; i < strlen(line); i++) {
+	char* line;
+	size_t length = 0;
+
+    //read in input file 
+	while (getline(&line, &length, fp) != -1) 
+    {
+        //convert to uppercase 
+		for (int i = 0; i < strlen(line); i++) 
+        {
             line[i] = toupper(line[i]);
-        }
-        // write to memory
-        strncpy(msg, line, MAXLINE);
-        puts(msg);
-        ++*tmp;
-        sleep(1); // pauses for one second
-    }
+        }       
+		strcpy(str, line);
+		(*tmp)++; 
+        printf("%s", line);
+		sleep(1);
+	}
 
-    strncpy(msg, "STOP", 5);
+    strncpy(msg, "Stop\n", 5);
     ++*tmp;
     puts("STOP");
     

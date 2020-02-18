@@ -53,7 +53,7 @@ int main(int argc, char * argv[])
         }
         n = tmp[0];
 
-        if (strcmp(msg, "STOP") == 0)
+        if (strcmp(msg, "Stop\n") == 0)
         {
             break;
         }
