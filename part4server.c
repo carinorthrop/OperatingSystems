@@ -46,19 +46,19 @@ int main()
         exit(1);
     }
 
-    //read in contents from file 
 	char* str = (char *)data + sizeof(int);
 	int old = *data;
+    
+    //read in inputs 
 	while (1) 
     {
-		// If the integer count changes
+		//checking to see if the data has already been read in 
 		if (old != *data) 
         {
-			old = *data; // update the count
+			old = *data;
+			printf("%s", str);
 
-			printf("%s", str); // print the string
-
-			// listening for stop from client 
+			//listening for stop from client  
 			if (strcmp(str, "Stop\n") == 0)
              {
 				break;

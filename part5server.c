@@ -16,7 +16,8 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 
-int main(int argc, char * argv[]) {
+int main(int argc, char * argv[]) 
+{
     const int MAXLINE = 1024;
     char line[MAXLINE];
     int input_fd;

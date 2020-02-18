@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
         exit(1);
     }
 
-	//attach to memory
+	//attach to memory 
     char *data;
     data = shmat(shmid, (void *)0, 0);
     if (data == (char *)(-1)) 
@@ -54,8 +54,8 @@ int main(int argc, char* argv[])
     }
 
 	//open file 
-	FILE* sourceFile = fopen(argv[1], "r");
-	if (sourceFile == NULL) 
+	FILE* fp = fopen(argv[1], "r");
+	if (fp == NULL) 
     {
 		perror(argv[1]);
 		exit(1);
@@ -64,13 +64,14 @@ int main(int argc, char* argv[])
     
 	char* str = (char *)data + sizeof(int);
 	*data = 0;
+
 	char* line;
 	size_t length = 0;
 
     //read in input file 
-	while (getline(&line, &length, sourceFile) != -1) 
+	while (getline(&line, &length, fp) != -1) 
     {
-        //conver to uppercase 
+        //convert to uppercase 
 		for (int i = 0; i < strlen(line); i++) 
         {
             line[i] = toupper(line[i]);
@@ -81,11 +82,11 @@ int main(int argc, char* argv[])
 		sleep(1);
 	}
 
-	//send stop singal to client 
+	//send stop signal to client  
 	strcpy(str, "Stop\n");
 	(*data)++;
 
-	//detach
+	//detached 
 	shmdt(str);
     
     return 0;

@@ -16,9 +16,11 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 
-int main(int argc, char * argv[]) {
-    //Verify correct number of arguments 
-    if (argc != 2) {
+int main(int argc, char * argv[]) 
+{
+    //parameter checking 
+    if (argc != 2) 
+    {
         printf("Please enter the correct number of arguments. Only need filename");
         exit(1);
     }
