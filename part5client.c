@@ -24,6 +24,7 @@ int main(int argc, char * argv[])
         printf("Please enter the correct number of arguments. Only need filename");
         exit(1);
     }
+
     const int MAXLINE = 1024;
     char line[MAXLINE];
     int output_fd;
@@ -37,7 +38,8 @@ int main(int argc, char * argv[])
         exit(1);
     }
     // open/create output file
-    if ((output_fd = open("middleman", O_RDWR | O_CREAT | O_TRUNC, 0644)) < 0){
+    if ((output_fd = open("middleman", O_RDWR | O_CREAT | O_TRUNC, 0644)) < 0)
+    {
         printf("Unable to open file\n");
         exit(1);
     }

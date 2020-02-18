@@ -25,7 +25,8 @@ int main(int argc, char * argv[])
     char * msg;
 
     // open input file
-    if ((input_fd = open("testfile.txt", O_RDWR | O_CREAT)) < 0){
+    if ((input_fd = open("testfile.txt", O_RDWR | O_CREAT)) < 0)
+    {
         printf("Unnable to open file\n");
         exit(1);
     }
@@ -42,14 +43,20 @@ int main(int argc, char * argv[])
 
     // read
     int n = -1; // ensure a change first time through loop
-    while (1) {
-        if (n == tmp[0]) {
+
+    while (1) 
+    {
+        if (n == tmp[0]) 
+        {
             continue;
+            printf("%s", msg);
         }
         n = tmp[0];
+
         if (strcmp(msg, "STOP") == 0)
+        {
             break;
-        printf("%s", msg);
+        }
     }
     unlink("testfile.txt");
 }
