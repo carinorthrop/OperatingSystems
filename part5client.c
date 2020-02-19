@@ -79,7 +79,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	// Send signal to the server to die
-	strcpy(-`, "Stop\n");
+	strcpy(str, "Stop\n");
 	(*count)++;
 
 	// Detach segments and close files
