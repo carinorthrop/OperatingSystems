@@ -30,33 +30,38 @@ int main(int argc, char * argv[])
     int output_fd;
     int * tmp;
     char * msg;
+    const char FILE_NAME[] = "testfile.txt";
 
-    // open input file
-    FILE *fp = fopen(argv[1], "r"); 
-    if (fp == NULL) {
-        printf("File not found.");
-        exit(1);
-    }
-    // open/create output file
-    if ((output_fd = open("middleman", O_RDWR | O_CREAT | O_TRUNC, 0644)) < 0)
+    // open the file
+    if ((output_fd = open(FILE_NAME, O_RDWR | O_CREAT | O_TRUNC, 0644)) < 0)
     {
-        printf("Unable to open file\n");
+        printf("There was a problem opening this file.\n");
         exit(1);
     }
           
     ftruncate(output_fd, MAXLINE);
 
-    // mmap output
+    //open the map  
     if ((tmp = (int*) mmap(0, MAXLINE, PROT_READ | PROT_WRITE, MAP_SHARED, output_fd, 0)) == MAP_FAILED){
-        printf("Error with mmap output\n");
+        printf("There was a problem opening the map.\n");
+        exit(1);
+    }
+
+    FILE *fp = fopen(argv[1], "r"); 
+    if (fp == NULL) 
+    {
+        printf("File not found.");
         exit(1);
     }
        
-    msg = (char*) tmp + 4;
+    //msg = (char*) tmp + 4;
 
+	char* str = (char *)msg + sizeof(int);
+	*msg = 0;
 	char* line;
 	size_t len = 0;
-    // mmap input
+    
+    //reading in input
     while(getline(&line, &len, fp) != NULL) 
     {
         for (int i = 0; i < strlen(line); i++) 
@@ -64,8 +69,7 @@ int main(int argc, char * argv[])
             line[i] = toupper(line[i]);
         }
         // write to memory
-        strncpy(msg, line);
-        puts(msg, line);
+        strcpy(msg, line);
         ++*tmp;
         sleep(1); // pauses for one second
     }
