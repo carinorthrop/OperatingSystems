@@ -42,5 +42,5 @@ int main(int argc, char * argv[]) {
             break;
         printf("%s", msg);
     }
-    unlink("testfile.txt");
+    unlink("middleman");
 }
