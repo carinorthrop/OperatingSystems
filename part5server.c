@@ -16,7 +16,7 @@ int main(int argc, char * argv[]) {
     char * msg;
 
     // open input file
-    if ((input_fd = open("testfile.txt", O_RDWR | O_CREAT)) < 0){
+    if ((input_fd = open("middleman", O_RDWR | O_CREAT)) < 0){
         printf("Unnable to open file\n");
         exit(1);
     }
