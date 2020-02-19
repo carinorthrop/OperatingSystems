@@ -41,7 +41,7 @@ int main(int argc, char * argv[])
 	}
 
        // mmap input
-    if ((tmp = (int*) mmap(NULL, FILESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, input_fd, 0)) == MAP_FAILED)
+    if ((tmp = (int*) mmap(NULL, FILE_SIZE, PROT_READ|PROT_WRITE, MAP_SHARED, input_fd, 0)) == MAP_FAILED)
      {
         printf("Error with mmap input\n");
         exit(1);
