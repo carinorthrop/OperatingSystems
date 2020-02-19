@@ -1,72 +1,64 @@
+]
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
+#include <fcntl.h> 
 #include <string.h>
-#include <ctype.h>
 #include <sys/mman.h>
+#include <ctype.h>
 
-// Helper function to convert a string to upper case.
-//   Loops through the characters of a string and makes them uppercase
-void makeupper(char* str) {
-	while (*str) {
-		*str = toupper((unsigned char) *str);
-		str++;
-	}
-}
+int main(int argc, char * argv[]) {
+    //Verify correct number of arguments 
+    if (argc != 2) {
+        printf("Please enter the correct number of arguments. Only need filename");
+        exit(1);
+    }
+    const int MAXLINE = 1024;
+    char line[MAXLINE];
+    int output_fd;
+    int * tmp;
+    char * msg;
 
-int main(int argc, char* argv[]) {
-	if (argc != 2) {
-		printf("Usage: %s file-to-read\n", argv[0]);
-		exit(1);
-	}
+    // open input file
+    FILE *fp = fopen(argv[1], "r"); 
+    if (fp == NULL) {
+        printf("File not found.");
+        exit(1);
+    }
+    // open/create output file
+    if ((output_fd = open("middleman", O_RDWR | O_CREAT | O_TRUNC, 0644)) < 0){
+        printf("Unable to open file\n");
+        exit(1);
+    }
+          
+    ftruncate(output_fd, MAXLINE);
 
-	const int FILESIZE = sizeof(char) + sizeof(int);
-	const char FILENAME[] = "test.bin";
+    // mmap output
+    if ((tmp = (int*) mmap(0, MAXLINE, PROT_READ | PROT_WRITE, MAP_SHARED, output_fd, 0)) == MAP_FAILED){
+        printf("Error with mmap output\n");
+        exit(1);
+    }
+       
+    msg = (char*) tmp + 4;
 
-	// Open a temporary file
-	int fd = open(FILENAME, O_RDWR|O_CREAT|O_TRUNC, 0600);
-	if (fd == -1) {
-		perror("open");
-		exit(1);
-	}
+    // mmap input
+    while(fgets(line, MAXLINE, fp) != NULL) {
+        for (int i = 0; i < strlen(line); i++) {
+            line[i] = toupper(line[i]);
+        }
+        // write to memory
+        strncpy(msg, line, MAXLINE);
+        puts(msg);
+        ++*tmp;
+        sleep(1); // pauses for one second
+    }
 
-	// Open the map!
-	int* count = (int *)mmap(NULL, FILESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0); 
-	if (count == MAP_FAILED) {
-		perror("mmap");
-		exit(1);
-	}
+    strncpy(msg, "STOP", 5);
+    ++*tmp;
+    puts("STOP");
+    
 
-	// Set a reference to the pointer for the string
-	char* str = (char *)count + sizeof(int);
 
-	FILE* sourceFile = fopen(argv[1], "r");
-	if (sourceFile == NULL) {
-		perror(argv[1]);
-		exit(1);
-	}
-
-	// Begin reading the lines from the source file
-	char* line;
-	size_t len = 0;
-
-	while (getline(&line, &len, sourceFile) != -1) {
-		makeupper(line); // convert to uppercase
-		strcpy(str, line); //move the line to the memory for the string
-		(*count)++; // update the count
-
-		sleep(1);
-	}
-
-	// Send signal to the server to die
-	strcpy(str, "Stop\n");
-	(*count)++;
-
-	// Detach segments and close files
-	munmap(count, FILESIZE);
-	close(fd);
-	fclose(sourceFile);
 }
