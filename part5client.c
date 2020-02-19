@@ -65,8 +65,29 @@ int main(int argc, char * argv[])
        
     msg = (char*) tmp + 4;
 
-    // mmap input
-    while(fgets(line, MAXLINE, fp) != NULL) 
+    //reading in
+    
+	char* line;
+	size_t len = 0;
+
+    char* str = (char *)tmp + sizeof(int);
+
+	while (getline(&line, &len, fp) != -1) 
+    {
+		makeupper(line); // convert to uppercase
+		strcpy(str, line); //move the line to the memory for the string
+		++*tmp; // update the count
+
+		sleep(1);
+	}
+
+
+
+
+
+
+
+    /*while(fgets(line, MAXLINE, fp) != NULL) 
     {
         for (int i = 0; i < strlen(line); i++) 
         {
@@ -77,10 +98,9 @@ int main(int argc, char * argv[])
         puts(msg);
         ++*tmp;
         sleep(1); // pauses for one second
-    }
+    }*/
 
     strncpy(msg, "STOP", 5);
-    ++*tmp;
     puts("STOP");
     
 
