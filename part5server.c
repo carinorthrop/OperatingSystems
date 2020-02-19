@@ -10,11 +10,13 @@
 
 int main(int argc, char * argv[]) 
 {
-    const int MAXLINE = 1024;
+    //const int MAXLINE = 1024;
     char line[MAXLINE];
     int input_fd;
     int * tmp;
     char * msg;
+
+    const char FILE_SIZE = sizeof(char) + sizeof(int);
 
     // open input file
     if ((input_fd = open("middleman", O_RDWR | O_CREAT | O_TRUNC)) < 0)
@@ -24,13 +26,11 @@ int main(int argc, char * argv[])
     }
 
     // mmap input
-    if ((tmp = (int*) mmap(0, MAXLINE, PROT_READ, MAP_SHARED, input_fd, 0)) == MAP_FAILED)
+    if ((tmp = (int*) mmap(0, FILE_SIZE, PROT_READ, MAP_SHARED, input_fd, 0)) == MAP_FAILED)
      {
         printf("Error with mmap input\n");
         exit(1);
     }
-
-    const char FILE_SIZE = sizeof(char) + sizeof(int);
 	//file_size
     int empty;
 	if ((empty = lseek(input_fd, FILE_SIZE - 1, SEEK_SET)) == -1) 
