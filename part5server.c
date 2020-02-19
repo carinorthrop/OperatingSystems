@@ -1,62 +1,65 @@
-// Caroline Northrop 
-// Part 5 server
-// Due Febuary 24th
-// OS 4029
-
-#include <errno.h>
-#include <ctype.h>
-#include <sys/wait.h>
-#include <sys/stat.h>
-#include <sys/shm.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
 #include <sys/mman.h>
 
-int main(int argc, char * argv[]) 
-{
-    const int MAXLINE = 1024;
-    char line[MAXLINE];
-    int input_fd;
-    int * tmp;
-    char * msg;
+int main() {
+	const int FILESIZE = sizeof(char) + sizeof(int);
+	const char FILENAME[] = "testfile.txt";
 
-    // open input file
-    if ((input_fd = open("testfile.txt", O_RDWR | O_CREAT)) < 0)
-    {
-        printf("Unnable to open file\n");
-        exit(1);
-    }
+	// Open a temporary file
+	int fd = open(FILENAME, O_RDWR|O_CREAT|O_TRUNC, 0600);
+	if (fd == -1) {
+		perror("open");
+		exit(1);
+	}
 
-    ftruncate(input_fd, MAXLINE);
+	// Expand the filesize 
+	int result = lseek(fd, FILESIZE - 1, SEEK_SET);
+	if (result == -1) {
+		perror("lseek");
+		exit(1);
+	}
 
-    // mmap input
-    if ((tmp = (int*) mmap(0, MAXLINE, PROT_READ, MAP_SHARED, input_fd, 0)) == MAP_FAILED){
-        printf("Error with mmap input\n");
-        exit(1);
-    }
+	// Write a dumby bit to actually expand the size
+	result = write(fd, "", 1);
+	if (result != 1) {
+		perror("write");
+		exit(1);
+	}
 
-    msg = (char*) tmp + 4;
+	// Open the memory segment
+	int* count = (int *)mmap(NULL, FILESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+	if (count == MAP_FAILED) {
+		perror("mmap");
+		exit(1);
+	}
 
-    // read
-    int n = -1; // ensure a change first time through loop
+	// Set a reference to the pointer for the string
+	char* str = (char *)count + sizeof(int);
 
-    while (1) 
-    {
-        if (n == tmp[0]) 
-        {
-            continue;
-            printf("%s", msg);
-        }
-        n = tmp[0];
+	// Begin reading the segments
+	int old = *count;
+	while (1) {
+		// If the integer count changes
+		if (old != *count) {
+			old = *count; // update the count
 
-        if (strcmp(msg, "Stop\n") == 0)
-        {
-            break;
-        }
-    }
-    unlink("testfile.txt");
+			printf("%s", str); // print the string
+
+			// If it's a stop, then let's get out of the loop
+			if (strcmp(str, "Stop\n") == 0) {
+				break;
+			}
+		}
+	}
+
+	// Delete the memory segment, close & delete the temp file
+	munmap(count, FILESIZE);
+	close(fd);
+	remove(FILENAME);
 }
