@@ -31,7 +31,8 @@ int main(int argc, char * argv[]) {
         exit(1);
     }
 
-    msg = (char*) tmp + 4;
+    //msg = (char*) tmp + 4;
+    char* str = (char *)tmp + sizeof(int);
 
     // read
     int n = -1; // ensure a change first time through loop
@@ -40,7 +41,7 @@ int main(int argc, char * argv[]) {
             continue;
         }
         n = tmp[0];
-        if (strcmp(msg, "STOP") == 0)
+        if (strcmp(str, "STOP") == 0)
             break;
         printf("%s", msg);
     }
