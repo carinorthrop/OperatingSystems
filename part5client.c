@@ -32,7 +32,7 @@ int main(int argc, char * argv[])
     const char FILE_NAME[] = "testfile.txt";
 
     // open the file
-    if ((output_fd = open(FILE_NAME, O_RDWR | O_CREAT | O_TRUNC, 0644)) != -1)
+    if ((output_fd = open(FILE_NAME, O_RDWR | O_CREAT | O_TRUNC, 0600)) != -1)
     {
         printf("There was a problem opening this file.\n");
         exit(1);
