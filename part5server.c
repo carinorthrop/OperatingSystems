@@ -10,7 +10,7 @@
 
 int main(int argc, char * argv[]) 
 {
-    //const int MAXLINE = 1024;
+    const int MAXLINE = 1024;
     char line[MAXLINE];
     int input_fd;
     int * tmp;
