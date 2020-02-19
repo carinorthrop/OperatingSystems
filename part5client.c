@@ -68,12 +68,12 @@ int main(int argc, char * argv[])
             line[i] = toupper(line[i]);
         }
         // write to memory
-        strcpy(msg, line);
+        strcpy(str, line);
         ++*tmp;
         sleep(1); // pauses for one second
     }
 
-    strncpy(msg, "Stop\n", 5);
+    strncpy(str, "Stop\n", 5);
     ++*tmp;
     puts("STOP");
     
