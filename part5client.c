@@ -74,7 +74,10 @@ int main(int argc, char * argv[])
 
 	while (getline(&line, &len, fp) != -1) 
     {
-		makeupper(line); // convert to uppercase
+		for (int i = 0; i < strlen(line); i++) 
+        {
+            line[i] = toupper(line[i]);
+        }
 		strcpy(str, line); //move the line to the memory for the string
 		++*tmp; // update the count
 
