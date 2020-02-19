@@ -68,7 +68,7 @@ int main(int argc, char * argv[])
         sleep(1); // pauses for one second
     }
 
-    strncpy(str, "Stop\n");
+    strcpy(str, "Stop\n");
     ++*tmp;
     
     
