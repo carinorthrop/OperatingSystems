@@ -3,18 +3,6 @@
 // Due Febuary 24th
 // OS 4029
 
-#include <errno.h>
-#include <ctype.h>
-#include <sys/wait.h>
-#include <sys/stat.h>
-#include <sys/shm.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdio.h>
@@ -41,7 +29,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	const int FILESIZE = sizeof(char) + sizeof(int);
-	const char FILENAME[] = "temp.bin";
+	const char FILENAME[] = "testfile.txt";
 
 	// Open a temporary file
 	int fd = open(FILENAME, O_RDWR|O_CREAT|O_TRUNC, 0600);
