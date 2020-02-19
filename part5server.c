@@ -16,42 +16,41 @@
 #include <fcntl.h>
 #include <sys/types.h>
 
-const int MAX = 1024;
-char line[MAX];
-
 int main(int argc, char * argv[]) 
 {
+    const int MAXLINE = 1024;
+    char line[MAXLINE];
+    int input_fd;
+    int * tmp;
+    char * msg;
+
     //open file
-    int input;
-    if ((input = open("test", O_RDWR | O_CREAT)) < 0)
-    {
+    if ((input_fd = open("test", O_RDWR | O_CREAT)) < 0){
         printf("There was a problem opening the file\n");
         exit(1);
     }
 
-    ftruncate(input, MAX);
+    ftruncate(input_fd, MAXLINE);
 
     //mmap
-    int * file;
-    if ((file = (int*) mmap(0, MAX, PROT_READ, MAP_SHARED, input, 0)) == MAP_FAILED)
+    if ((tmp = (int*) mmap(0, MAXLINE, PROT_READ, MAP_SHARED, input_fd, 0)) == MAP_FAILED)
     {
         printf("There was a problem with the mmap input\n");
         exit(1);
     }
-    
-    char * msg;
-    msg = (char*)file + 4;
+
+    msg = (char*) tmp + 4;
 
     // read in input 
     int n = -1; 
 
     while (1)
     {
-        if (n == file[0]) 
+        if (n == tmp[0]) 
         {
             continue;
         }
-        n = file[0];
+        n = tmp[0];
 
         //checking for a stop from the client 
         if (strcmp(msg, "Stop\n") == 0)
