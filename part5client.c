@@ -26,7 +26,6 @@ int main(int argc, char * argv[])
     }
 
     const int MAXLINE = 1024;
-    char line[MAXLINE];
     int output_fd;
     int * tmp;
     char * msg;
@@ -62,7 +61,7 @@ int main(int argc, char * argv[])
 	size_t len = 0;
     
     //reading in input
-    while(getline(&line, &len, fp) != NULL) 
+    while(getline(&line, &len, fp) != -1) 
     {
         for (int i = 0; i < strlen(line); i++) 
         {
