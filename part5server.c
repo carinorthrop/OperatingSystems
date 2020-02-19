@@ -9,7 +9,7 @@
 
 int main() {
 	const int FILESIZE = sizeof(char) + sizeof(int);
-	const char FILENAME[] = "testfile.txt";
+	const char FILENAME[] = "test.bin";
 
 	// Open a temporary file
 	int fd = open(FILENAME, O_RDWR|O_CREAT|O_TRUNC, 0600);
