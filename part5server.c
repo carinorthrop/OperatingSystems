@@ -25,12 +25,6 @@ int main(int argc, char * argv[])
         exit(1);
     }
 
-    // mmap input
-    if ((tmp = (int*) mmap(0, FILE_SIZE, PROT_READ, MAP_SHARED, input_fd, 0)) == MAP_FAILED)
-     {
-        printf("Error with mmap input\n");
-        exit(1);
-    }
 	//file_size
     int empty;
 	if ((empty = lseek(input_fd, FILE_SIZE - 1, SEEK_SET)) == -1) 
@@ -45,6 +39,13 @@ int main(int argc, char * argv[])
 		perror("Problem with writing an empty bit");
 		exit(1);
 	}
+
+       // mmap input
+    if ((tmp = (int*) mmap(NULL, FILESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, input_fd, 0)) == MAP_FAILED)
+     {
+        printf("Error with mmap input\n");
+        exit(1);
+    }
 
     msg = (char*) tmp + 4;
 
