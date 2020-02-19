@@ -28,7 +28,7 @@ int main(int argc, char * argv[]) {
         exit(1);
     }
     // open/create output file
-    if ((output_fd = open("middleman", O_RDWR | O_CREAT | O_TRUNC, 0644)) < 0){
+    if ((output_fd = open("testfile.txt", O_RDWR | O_CREAT | O_TRUNC, 0644)) < 0){
         printf("Unable to open file\n");
         exit(1);
     }
