@@ -17,7 +17,7 @@ int main(int argc, char * argv[])
     char * msg;
 
     // open input file
-    if ((input_fd = open("middleman", O_RDWR | O_CREAT)) < 0)
+    if ((input_fd = open("middleman", O_RDWR | O_CREAT | O_TRUNC)) < 0)
     {
         printf("Unnable to open file\n");
         exit(1);
@@ -35,14 +35,14 @@ int main(int argc, char * argv[])
     int empty;
 	if ((empty = lseek(tmp, FILE_SIZE - 1, SEEK_SET)) == -1) 
     {
-		perror("lseek");
+		perror("Problem with the size");
 		exit(1);
 	}
 
 	//write and empty bit 
 	if ((empty = write(tmp, "", 1)) != 1) 
     {
-		perror("write");
+		perror("Problem with writing an empty bit");
 		exit(1);
 	}
 
