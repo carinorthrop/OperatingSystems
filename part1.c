@@ -44,13 +44,15 @@ int main(int argc, char *argv[])
             
             //execute 
             execl(argv[1],argv[1], (char*)NULL);
+
             exit(0);
         }
-        
+
             else
             {
                 wait(NULL);
             }
     }
+    
     return 0;
 }

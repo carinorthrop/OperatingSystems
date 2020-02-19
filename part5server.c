@@ -1,46 +1,67 @@
+// Caroline Northrop 
+// Part 5 server
+// Due Febuary 24th
+// OS 4029
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <sys/types.h>
+
+#include <errno.h>
+#include <ctype.h>
+#include <sys/wait.h>
 #include <sys/stat.h>
-#include <fcntl.h> 
+#include <sys/shm.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 #include <string.h>
-#include <sys/mman.h>
+#include <fcntl.h>
+#include <sys/types.h>
 
-int main(int argc, char * argv[]) {
-    const int MAXLINE = 1024;
-    char line[MAXLINE];
-    int input_fd;
-    int * tmp;
+const int MAX = 1024;
+char line[MAX];
+
+int main(int argc, char * argv[]) 
+{
+    //open file
+    int input;
+    if ((input = open("test", O_RDWR | O_CREAT)) < 0)
+    {
+        printf("There was a problem opening the file\n");
+        exit(1);
+    }
+
+    ftruncate(input, MAX);
+
+    //mmap
+    int * file;
+    if ((file = (int*) mmap(0, MAX, PROT_READ, MAP_SHARED, input, 0)) == MAP_FAILED)
+    {
+        printf("There was a problem with the mmap input\n");
+        exit(1);
+    }
+    
     char * msg;
+    msg = (char*)file + 4;
 
-    // open input file
-    if ((input_fd = open("middleman", O_RDWR | O_CREAT)) < 0){
-        printf("Unnable to open file\n");
-        exit(1);
-    }
+    // read in input 
+    int n = -1; 
 
-    ftruncate(input_fd, MAXLINE);
-
-    // mmap input
-    if ((tmp = (int*) mmap(0, MAXLINE, PROT_READ, MAP_SHARED, input_fd, 0)) == MAP_FAILED){
-        printf("Error with mmap input\n");
-        exit(1);
-    }
-
-    msg = (char*) tmp + 4;
-
-    // read
-    int n = -1; // ensure a change first time through loop
-    while (1) {
-        if (n == tmp[0]) {
+    while (1)
+    {
+        if (n == file[0]) 
+        {
             continue;
         }
-        n = tmp[0];
-        if (strcmp(msg, "STOP") == 0)
+        n = file[0];
+
+        //checking for a stop from the client 
+        if (strcmp(msg, "Stop\n") == 0)
+        {
             break;
+        }
+
         printf("%s", msg);
     }
-    unlink("middleman");
+
+    unlink("test");
+    return 0;
 }

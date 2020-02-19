@@ -31,7 +31,7 @@ int main()
         fputs(&line[0], fp2);
     }
 
-    //closes pipes
+    //closes pipes 
     pclose(fp1);
     pclose(fp2);
 }

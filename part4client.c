@@ -75,7 +75,8 @@ int main(int argc, char* argv[])
 		for (int i = 0; i < strlen(line); i++) 
         {
             line[i] = toupper(line[i]);
-        }       
+        }     
+          
 		strcpy(str, line);
 		(*data)++; 
         printf("%s", line);

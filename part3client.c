@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
         printf("The correct parameters were not entered. Usage: file_name");
         exit(1);
     }
+    
     const int MAX = 300;
     char line[MAX];
 
@@ -30,16 +31,10 @@ int main(int argc, char *argv[])
     char* pipe = "/tmp/part3";
     mkfifo(pipe, 0666); 
 
+    //open the pipe
     int input = open(pipe, O_WRONLY);
 
-    //error checking opening file
-    /*
-    if (input == -1)
-    {
-        printf("There was a problem opening the file \n");
-        exit(0);
-    }*/
-
+    //open the file
     FILE *fd = fopen(argv[1], "r");
 
     //convert to uppercase

@@ -1,64 +1,81 @@
+// Caroline Northrop 
+// Part 4 client
+// Due Febuary 24th
+// OS 4029
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h> 
-#include <string.h>
-#include <sys/mman.h>
+
+#include <errno.h>
 #include <ctype.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
+#include <sys/shm.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+#include <fcntl.h>
+#include <sys/types.h>
 
-int main(int argc, char * argv[]) {
-    //Verify correct number of arguments 
-    if (argc != 2) {
-        printf("Please enter the correct number of arguments. Only need filename");
+const int MAX = 1024;
+char line[MAX];
+
+int main(int argc, char * argv[]) 
+{
+    //input checking  
+    if (argc != 2) 
+    {
+        printf("The correct parameters were not entered. Usage: file_name");
         exit(1);
     }
-    const int MAXLINE = 1024;
-    char line[MAXLINE];
-    int output_fd;
-    int * tmp;
-    char * msg;
 
-    // open input file
+    //open file 
     FILE *fp = fopen(argv[1], "r"); 
-    if (fp == NULL) {
-        printf("File not found.");
+    if (fp == NULL) 
+    {
+        printf("The file was not found\n");
         exit(1);
     }
-    // open/create output file
-    if ((output_fd = open("middleman", O_RDWR | O_CREAT | O_TRUNC, 0644)) < 0){
-        printf("Unable to open file\n");
-        exit(1);
-    }
-          
-    ftruncate(output_fd, MAXLINE);
 
-    // mmap output
-    if ((tmp = (int*) mmap(0, MAXLINE, PROT_READ | PROT_WRITE, MAP_SHARED, output_fd, 0)) == MAP_FAILED){
-        printf("Error with mmap output\n");
+    //create file
+    int output;
+    if ((output = open("test", O_RDWR | O_CREAT | O_TRUNC, 0644)) < 0)
+    {
+        printf("The file cannot be opened\n");
+        exit(1);
+    } 
+
+    ftruncate(output, MAX);
+
+    //mmap
+    int * file;
+    if ((file = (int*) mmap(0, MAX, PROT_READ | PROT_WRITE, MAP_SHARED, output, 0)) == MAP_FAILED)
+    {
+        printf("There is a problem with mmap output\n");
         exit(1);
     }
-       
-    msg = (char*) tmp + 4;
 
-    // mmap input
-    while(fgets(line, MAXLINE, fp) != NULL) {
-        for (int i = 0; i < strlen(line); i++) {
+    char * tmp;    
+    tmp = (char*) file + 4;
+
+    //read in 
+    while(fgets(line, MAX, output) != NULL) 
+    {
+        //convert to uppercase
+        for (int i = 0; i < strlen(line); i++) 
+        {
             line[i] = toupper(line[i]);
         }
+
         // write to memory
-        strncpy(msg, line, MAXLINE);
-        puts(msg);
-        ++*tmp;
+        strncpy(tmp, line, MAX);
+        puts(tmp);
+        ++*file;
         sleep(1); // pauses for one second
     }
 
-    strncpy(msg, "STOP", 5);
-    ++*tmp;
-    puts("STOP");
-    
+    strncpy(tmp, "Stop\n", 5);
+    ++*file;
+    puts("Stop");
 
-
+    return 0;
 }
