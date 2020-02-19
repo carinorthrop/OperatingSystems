@@ -33,14 +33,14 @@ int main(int argc, char * argv[])
     const char FILE_SIZE = sizeof(char) + sizeof(int);
 	//file_size
     int empty;
-	if ((empty = lseek(tmp, FILE_SIZE - 1, SEEK_SET)) == -1) 
+	if ((empty = lseek(input_fd, FILE_SIZE - 1, SEEK_SET)) == -1) 
     {
 		perror("Problem with the size");
 		exit(1);
 	}
 
 	//write and empty bit 
-	if ((empty = write(tmp, "", 1)) != 1) 
+	if ((empty = write(input_fd, "", 1)) != 1) 
     {
 		perror("Problem with writing an empty bit");
 		exit(1);
