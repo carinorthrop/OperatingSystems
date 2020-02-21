@@ -61,7 +61,7 @@ int main()
 		if (old != *data) 
         {
 			old = *data;
-			printf("%s", str);
+			printf("%s\n", str);
 
 			//listening stop from counter
 			if (strcmp(str, "Stop\n") == 0) 
