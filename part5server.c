@@ -1,5 +1,5 @@
 // Caroline Northrop 
-// Part 4 server
+// Part 5 server
 // Due Febuary 24th
 // OS 4029
 
@@ -61,10 +61,10 @@ int main()
 		if (old != *data) 
         {
 			old = *data;
-			printf("%s\n", str);
+			printf("%s", str);
 
 			//listening stop from counter
-			if (strcmp(str, "Stop\n") == 0) 
+			if (strcmp(str, "\nStop\n") == 0) 
             {
 				break;
 			}
