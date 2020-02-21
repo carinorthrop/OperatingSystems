@@ -1,65 +1,77 @@
-#include <sys/types.h>
+// Caroline Northrop 
+// Part 4 server
+// Due Febuary 24th
+// OS 4029
+
+#include <errno.h>
+#include <ctype.h>
+#include <sys/wait.h>
 #include <sys/stat.h>
+#include <sys/shm.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <string.h>
-#include <sys/mman.h>
+#include <fcntl.h>
+#include <sys/types.h>
 
-int main() {
-	const int FILESIZE = sizeof(char) + sizeof(int);
-	const char FILENAME[] = "temp.bin";
+const int FILE_SIZE = sizeof(char) + sizeof(int);
+const char FILE_NAME[] = "temp.txt";
 
-	// Open a temporary file
-	int fd = open(FILENAME, O_RDWR|O_CREAT|O_TRUNC, 0600);
-	if (fd == -1) {
-		perror("open");
+int main() 
+{
+
+	//open file
+	int fd;
+	if ((fd = open(FILE_NAME, O_RDWR|O_CREAT|O_TRUNC, 0600)) == -1) 
+    {
+		perror("There was a problem opening the file.\n");
 		exit(1);
 	}
 
-	// Expand the filesize 
-	int result = lseek(fd, FILESIZE - 1, SEEK_SET);
-	if (result == -1) {
-		perror("lseek");
+	//change file size
+    int result;
+	if ((result = lseek(fd, FILE_SIZE - 1, SEEK_SET)) == -1) 
+    {
+		perror("There was a problem with changing the file size");
 		exit(1);
 	}
 
-	// Write a dumby bit to actually expand the size
-	result = write(fd, "", 1);
-	if (result != 1) {
-		perror("write");
+	//write an empty bit to the file size 
+	if ((result = write(fd, "", 1)) != 1)
+    {
+		perror("There was a problem with writing the empty bits to the file size");
 		exit(1);
 	}
 
-	// Open the memory segment
-	int* count = (int *)mmap(NULL, FILESIZE, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
-	if (count == MAP_FAILED) {
-		perror("mmap");
+	//mmap
+	int* data;
+	if ((data = (int *)mmap(NULL, FILE_SIZE, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED) 
+    {
+		perror("There was a problem with mmap");
 		exit(1);
 	}
 
-	// Set a reference to the pointer for the string
-	char* str = (char *)count + sizeof(int);
+	char* str = (char *)data + sizeof(int);
+    int old = *data;
 
-	// Begin reading the segments
-	int old = *count;
-	while (1) {
-		// If the integer count changes
-		if (old != *count) {
-			old = *count; // update the count
+	while (1) 
+    {
+		if (old != *data) 
+        {
+			old = *data;
+			printf("%s", str);
 
-			printf("%s", str); // print the string
-
-			// If it's a stop, then let's get out of the loop
-			if (strcmp(str, "Stop\n") == 0) {
+			//listening stop from counter
+			if (strcmp(str, "Stop\n") == 0) 
+            {
 				break;
 			}
 		}
 	}
 
-	// Delete the memory segment, close & delete the temp file
-	munmap(count, FILESIZE);
+	//cleanup 
+    remove(FILE_NAME);
+	munmap(data, FILE_SIZE);
 	close(fd);
-	remove(FILENAME);
 }
