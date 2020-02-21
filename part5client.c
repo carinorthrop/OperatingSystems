@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	const int FILESIZE = sizeof(char) + sizeof(int);
-	const char FILENAME[] = "temp.bin";
+	const char FILENAME[] = "temp.txt";
 
 	// Open a temporary file
 	int fd = open(FILENAME, O_RDWR|O_CREAT|O_TRUNC, 0600);
