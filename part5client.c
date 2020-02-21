@@ -76,6 +76,6 @@ int main(int argc, char* argv[])
 
     //clean up
 	munmap(data, FILE_SIZE);
-    fclose(data);
+    fclose(*data);
 	close(fd);
 }
