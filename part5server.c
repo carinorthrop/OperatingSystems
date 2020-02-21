@@ -14,6 +14,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <sys/types.h>
+#include <sys/mman.h>
 
 const int FILE_SIZE = sizeof(char) + sizeof(int);
 const char FILE_NAME[] = "temp.txt";
