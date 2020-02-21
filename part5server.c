@@ -64,7 +64,7 @@ int main()
 			printf("%s", str);
 
 			//listening stop from counter
-			if (strcmp(str, "\nStop\n") == 0) 
+			if (strcmp(str, "Stop\n") == 0) 
             {
 				break;
 			}
