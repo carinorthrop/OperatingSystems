@@ -88,5 +88,7 @@ int main(int argc, char* argv[])
         perror("shmdt");
         exit(1);
     }
+
+	//delete
 	shmdt(str);
 }
