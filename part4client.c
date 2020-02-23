@@ -53,6 +53,9 @@ int main(int argc, char* argv[])
         exit(1);
     }
 
+    char* str = (char *)data + sizeof(int);
+	*data = 0;
+
 	//open file 
 	FILE* fp = fopen(argv[1], "r");
 	if (fp == NULL) 
@@ -60,10 +63,6 @@ int main(int argc, char* argv[])
 		perror(argv[1]);
 		exit(1);
 	}
-
-    
-	char* str = (char *)data + sizeof(int);
-	*data = 0;
 
 	char* line;
 	size_t length = 0;
@@ -79,7 +78,7 @@ int main(int argc, char* argv[])
 
 		strcpy(str, line);
 		(*data++); 
-       // printf("%s", line);
+        printf("%s", line);
 		sleep(1);
 	}
 
