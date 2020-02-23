@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
 
 	//open file
 	int fd;
-	if ((fd = open(FILE_NAME, O_RDWR|O_CREAT|O_TRUNC, 0600)) == -1) 
+	if ((fd = open(FILE_NAME, O_RDWR|O_CREAT|O_TRUNC, 0644)) < 0) 
     {
 		perror("open");
 		exit(1);
