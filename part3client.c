@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
         printf("The correct parameters were not entered. Usage: file_name");
         exit(1);
     }
-    
+
     const int MAX = 300;
     char line[MAX];
 
@@ -55,5 +55,4 @@ int main(int argc, char *argv[])
     close(input);
     fclose(fd);
 
-    return 0;
 }

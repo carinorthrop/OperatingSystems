@@ -43,6 +43,4 @@ int main(int argc, char *argv[])
     //close and remove the pipe
     close(output);
     remove("tmp/myfifo");
-
-    return 0;
 }

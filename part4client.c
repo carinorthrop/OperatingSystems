@@ -90,5 +90,4 @@ int main(int argc, char* argv[])
 	//detached
 	shmdt(str);
     
-    return 0;
 }
