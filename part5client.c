@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 	int fd;
 	if ((fd = open(FILE_NAME, O_RDWR|O_CREAT|O_TRUNC, 0600)) == -1) 
     {
-		perror("There was a problem opening the file.\n");
+		perror("open");
 		exit(1);
 	}
 
@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
 	int* data;
 	if ((data = (int *)mmap(NULL, FILE_SIZE, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED) 
     {
-		perror("There was a problem with mmap");
+		perror("mmap");
 		exit(1);
     }
 
