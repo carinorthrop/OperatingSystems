@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
 
 		strcpy(str, line);
 		(*data++); 
-        //printf("%s", line);
+       // printf("%s", line);
 		sleep(1);
 	}
 
