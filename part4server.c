@@ -12,6 +12,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
+#include <sys/shm.h>
+#include <sys/types.h>
+
 
 const int SHM_SIZE = 1024;
 const char FILE_NAME[] = "txt.txt";
