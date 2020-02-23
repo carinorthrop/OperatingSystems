@@ -39,8 +39,8 @@ int main()
 	}
 
 	//attach
-	char* data = (int *)shmat(shmid, (void *)0, 0);
-	if (data == (int *)-1) 
+	int* data = (int *)shmat(shmid, (void *)0, 0);
+	if (data == (int *)(-1)) 
     {
 		perror("shmat");
 		exit(1);
