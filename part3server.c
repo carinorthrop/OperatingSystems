@@ -15,7 +15,7 @@
 #include <fcntl.h>
 
 
-int main() 
+int main(int argc, char *argv[]) 
 {    
     const int MAX = 300;
     char line[MAX];
