@@ -44,8 +44,8 @@ int main(int argc, char* argv[])
 	}
 
 	//attach
-	int* data = (int *)shmat(shmid, (void *)0, 0);
-	if (data == (int *)(-1)) 
+	char* data = shmat(shmid, (void *)0, 0);
+	if (data == (char *)(-1)) 
     {
 		perror("shmat");
 		exit(1);
@@ -83,5 +83,10 @@ int main(int argc, char* argv[])
 	(*data)++;
 
 	//detach 
+	if (shmdt(data) == -1) 
+	{
+        perror("shmdt");
+        exit(1);
+    }
 	shmdt(str);
 }
