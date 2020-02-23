@@ -1,56 +1,68 @@
-#include <sys/types.h>
+// Caroline Northrop 
+// Part 4 server
+// Due Febuary 24th
+// OS 4029
+
+#include <errno.h>
+#include <ctype.h>
+#include <sys/wait.h>
 #include <sys/stat.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <string.h>
-#include <sys/shm.h>
+#include <fcntl.h>
 
-int main() {
-	const int SHM_SIZE = 1024;
-	const char FILENAME[] = "txt.txt";
+const int SHM_SIZE = 1024;
+const char FILE_NAME[] = "txt.txt";
 
-	// Generate a key
-	key_t key = ftok(FILENAME, 1);
-	if (key == -1) {
+
+int main() 
+{
+	//create a key
+	key_t key;
+	if ((key = ftok(FILE_NAME, 1)) == -1) 
+    {
 		perror("ftok");
 		exit(1);
 	}
 
-	// Connect to and create the shared memory space
-	int shmid = shmget(key, SHM_SIZE, 0644|IPC_CREAT);
-	if (shmid == -1) {
+	//create memory space
+	int shmid;
+	if ((shmid = shmget(key, SHM_SIZE, 0644|IPC_CREAT)) == -1) 
+    {
 		perror("shmget");
 		exit(1);
 	}
 
-	// Attach to memory segment
-	int* count = (int *)shmat(shmid, (void *)0, 0);
-	if (count == (int *)-1) {
+	//attach
+	char* data = (int *)shmat(shmid, (void *)0, 0);
+	if (data == (int *)-1) 
+    {
 		perror("shmat");
 		exit(1);
 	}
 
-	// Reference to the string
-	char* str = (char *)count + sizeof(int);
+	char* str = (char *)data + sizeof(int);
 
-	// Begin reading the segments
-	int old = *count;
-	while (1) {
-		// If the integer count changes
-		if (old != *count) {
-			old = *count; // update the count
+	//read in input 
+	int old = *data;
+	while (1) 
+    {
+		
+		if (old != *data) 
+        {
+			old = *data; 
+			printf("%s", str);
 
-			printf("%s", str); // print the string
-
-			// If it's a stop, then let's get out of the loop
-			if (strcmp(str, "Stop\n") == 0) {
+			//listening for stop from client 
+			if (strcmp(str, "Stop\n") == 0) 
+            {
 				break;
 			}
 		}
 	}
 
-	// Delete the memory segments
+	//detach
 	shmctl(shmid, IPC_RMID, NULL);
 }
