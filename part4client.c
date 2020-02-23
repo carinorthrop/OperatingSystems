@@ -78,14 +78,14 @@ int main(int argc, char* argv[])
         }     
 
 		strcpy(str, line);
-		*data++; 
+		(*data++); 
         printf("%s", line);
 		sleep(1);
 	}
 
 	//send stop signal to client  
 	strcpy(str, "Stop\n");
-	*data++;
+	(*data++);
 
 	//detached
 	shmdt(str);
