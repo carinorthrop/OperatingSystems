@@ -63,7 +63,7 @@ int main()
 			old = *data;
 			printf("%s", str);
 
-			//listening stop from counter
+			//listening stop from client
 			if (strcmp(str, "Stop\n") == 0) 
             {
 				break;
