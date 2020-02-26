@@ -70,10 +70,6 @@ int main(int argc, char* argv[])
 		sleep(1);
 	}
 
-	//send stop signal to client 
-	strcpy(str, "Stop\n");
-	(*data)++;
-
     //clean up
 	munmap(data, FILE_SIZE);
     fclose(fp);
