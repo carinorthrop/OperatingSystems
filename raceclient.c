@@ -16,80 +16,66 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 
-const int SHM_SIZE = 1024;
-const char FILE_NAME[] = "txt.txt";
+const int FILE_SIZE = sizeof(char) + sizeof(int);
+const char FILE_NAME[] = "temp.txt";
 
 int main(int argc, char* argv[]) 
 {
     //parameter checking
-    if (argc != 2) 
+	if (argc != 2) 
     {
 		printf("The correct parameters were not entered. Usage: file_name");
 		exit(1);
 	}
 
-	//create a key
-	key_t key; 
-	if ((key =ftok(FILE_NAME, 1)) == -1) 
+	//open file
+	int fd;
+	if ((fd = open(FILE_NAME, O_RDWR|O_CREAT|O_TRUNC, 0644)) < 0) 
     {
-		perror("ftok");
+		perror("open");
 		exit(1);
 	}
 
-	//create memory space
-	int shmid;
-	if ((shmid = shmget(key, SHM_SIZE, 0644|IPC_CREAT)) == -1) 
+	//mmap
+	int* data;
+	if ((data = (int *)mmap(NULL, FILE_SIZE, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED) 
     {
-		perror("shmget");
+		perror("mmap");
 		exit(1);
-	}
+    }
 
-	//attach
-	char* data = shmat(shmid, (void *)0, 0);
-	if (data == (char *)(-1)) 
-    {
-		perror("shmat");
-		exit(1);
-	}
-
-	//open
-	FILE* file = fopen(argv[1], "r");
-	if (file == NULL) 
+    //open file 
+	FILE* fp = fopen(argv[1], "r");
+	if (fp == NULL) 
     {
 		perror(argv[1]);
 		exit(1);
 	}
 
 	char* str = (char *)data + sizeof(int);
-	*data = 0;
 	char* line;
 	size_t length = 0;
 
-    //read in input
-	while (getline(&line, &length, file) != -1) 
+    //read in file
+	while (getline(&line, &length, fp) != -1) 
     {
-        //convert to uppercase
+		//convert to uppercase 
 		for (int i = 0; i < strlen(line); i++) 
         {
             line[i] = toupper(line[i]);
-        }
+        }  
 
 		strcpy(str, line);
 		(*data)++; 
 		sleep(1);
 	}
 
-	//tell server to break out of loop
+	//send stop signal to client 
 	strcpy(str, "Stop\n");
 	(*data)++;
 
-	//detach 
-	if (shmdt(data) == -1) 
-	{
-        perror("shmdt");
-        exit(1);
-    }
-
-	//delete
-	shmdt(str);
+    //clean up
+	munmap(data, FILE_SIZE);
+    fclose(fp);
+	close(fd);
 }

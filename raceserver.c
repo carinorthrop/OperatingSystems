@@ -7,53 +7,71 @@
 #include <ctype.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
-#include <sys/shm.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
+#include <sys/shm.h>
 #include <sys/types.h>
-#include <sys/mman.h>
 
-int main(int argc, char * argv[]) 
+const int FILE_SIZE = sizeof(char) + sizeof(int);
+const char FILE_NAME[] = "temp.txt";
+
+int main() 
 {
-    const int MAXLINE = 1024;
-    char line[MAXLINE];
-    int input_fd;
-    int * tmp;
-    char * msg;
 
-    // open input file
-    if ((input_fd = open("middleman", O_RDWR | O_CREAT)) < 0)
+	//open file
+	int fd;
+	if ((fd = open(FILE_NAME, O_RDWR|O_CREAT|O_TRUNC, 0600)) == -1) 
     {
-        printf("There was a problem opening the file.");
-        exit(1);
-    }
+		perror("open");
+		exit(1);
+	}
 
-    ftruncate(input_fd, MAXLINE);
-
-    // mmap input
-    if ((tmp = (int*) mmap(0, MAXLINE, PROT_READ, MAP_SHARED, input_fd, 0)) == MAP_FAILED)
+	//change file size
+    int result;
+	if ((result = lseek(fd, FILE_SIZE - 1, SEEK_SET)) == -1) 
     {
-        printf("There was a mmap problem");
-        exit(1);
-    }
+		perror("lseek");
+		exit(1);
+	}
 
-    msg = (char*) tmp + 4;
-
-    //read in the input file 
-    int n = -1; // ensure a change first time through loop
-    while (1) 
+	//write an empty bit to the file size 
+	if ((result = write(fd, "", 1)) != 1)
     {
-        if (n == tmp[0]) 
+		perror("write");
+		exit(1);
+	}
+
+	//mmap
+	int* data;
+	if ((data = (int *)mmap(NULL, FILE_SIZE, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED) 
+    {
+		perror("mmap");
+		exit(1);
+	}
+
+	char* str = (char *)data + sizeof(int);
+    int old = *data;
+
+	while (1) 
+    {
+		if (old != *data) 
         {
-            continue;
-        }
-        n = tmp[0];
-        if (strcmp(msg, "STOP") == 0)
-            break;
-        printf("%s", msg);
-    }
-    unlink("middleman");
+			old = *data;
+			printf("%s", str);
+
+			//listening stop from client
+			if (strcmp(str, "Stop\n") == 0) 
+            {
+				break;
+			}
+		}
+	}
+
+	//cleanup 
+    remove(FILE_NAME);
+	munmap(data, FILE_SIZE);
+	close(fd);
 }
