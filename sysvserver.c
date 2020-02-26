@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
     n = 0;
     while ( (n < 10))
     {
-        printf("segment contains: \"%s\"\n", data);
+        printf("%s\"\n", data);
         sleep(5);   /* Sleep 5 seconds) */
         n++;
     }
