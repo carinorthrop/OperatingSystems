@@ -63,4 +63,4 @@ int main(int argc, char * argv[]) {
 
     strncpy(msg, "STOP", 5);
     ++*tmp;
-    puts("STOP");
+    //puts("STOP");
