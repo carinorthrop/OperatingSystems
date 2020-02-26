@@ -18,19 +18,19 @@
 #include <sys/ipc.h>
 
     //union struct
-    struct semun
+    union semun
     {
         int val;
         struct semid_ds *buf;
         ushort *array;
-    }
+    };
     //special semaphore structure to use the operations
     struct sembuf
     {
         int sem_num;
         short sem_op;
         short sem_flg;
-    }
+    };
 
 
 const int SHM_SIZE = 1024;
