@@ -57,10 +57,10 @@ int main(int argc, char * argv[]) {
         // write to memory
         strncpy(msg, line, MAXLINE);
         puts(msg);
-        (++*)tmp;
+        (*tmp)++;
         sleep(1); // pauses for one second
     }
 
     strncpy(msg, "STOP", 5);
-    (++*)tmp;
+    (*tmp)++;
     //puts("STOP");
