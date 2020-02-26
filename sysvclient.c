@@ -36,18 +36,18 @@ int main(int argc, char* argv[])
 	}
 
 	//create memory space
-	int shmid;
-	if ((shmid = shmget(key, SHM_SIZE, 0644|IPC_CREAT)) == -1) 
+	int semid;
+	if ((semid = semget(key, SHM_SIZE, 0644|IPC_CREAT)) == -1) 
     {
-		perror("shmget");
+		perror("semget");
 		exit(1);
 	}
 
 	//attach
-	char* data = shmat(shmid, (void *)0, 0);
+	char* data = semat(semid, (void *)0, 0);
 	if (data == (char *)(-1)) 
     {
-		perror("shmat");
+		perror("semat");
 		exit(1);
 	}
 
@@ -83,12 +83,12 @@ int main(int argc, char* argv[])
 	(*data)++;
 
 	//detach 
-	if (shmdt(data) == -1) 
+	if (semdt(data) == -1) 
 	{
-        perror("shmdt");
+        perror("semdt");
         exit(1);
     }
 
 	//delete
-	shmdt(str);
+	semdt(str);
 }
