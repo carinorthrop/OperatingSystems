@@ -66,6 +66,14 @@ int main()
 		exit(1);
 	}
 
+    //mmap
+	int* data;
+	if ((data = (int *)mmap(NULL, FILE_SIZE, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED) 
+    {
+		perror("mmap");
+		exit(1);
+    }
+
     //get/create semaphore ID
 	int semaid;
 	if ((semaid = semget(key, 1, 0660|IPC_CREAT)) == -1) 
@@ -81,14 +89,6 @@ int main()
 		perror("semctl");
 		exit(1);
 	}
-
-    //mmap
-	int* data;
-	if ((data = (int *)mmap(NULL, FILE_SIZE, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED) 
-    {
-		perror("mmap");
-		exit(1);
-    }
 
 	char* str = (char *)data + sizeof(int);
 

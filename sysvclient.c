@@ -47,14 +47,6 @@ int main(int argc, char* argv[])
 		exit(1);
 	}
 
-    //get/create semaphore ID
-	int semaid;
-	if ((semaid = semget(key, 1, 0660|IPC_CREAT)) == -1) 
-    {
-		perror("semget");
-		exit(1);
-	}
-
 	//mmap
 	int* data;
 	if ((data = (int *)mmap(NULL, FILE_SIZE, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED) 
@@ -68,6 +60,14 @@ int main(int argc, char* argv[])
 	if (fp == NULL) 
     {
 		perror(argv[1]);
+		exit(1);
+	}
+
+    //get/create semaphore ID
+	int semaid;
+	if ((semaid = semget(key, 1, 0660|IPC_CREAT)) == -1) 
+    {
+		perror("semget");
 		exit(1);
 	}
 
@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
 	char* line;
 	size_t length = 0;
 
-    //entry
+    //enter
 	semop(semaid, WAIT, 1);
 
     //read in file
