@@ -18,7 +18,7 @@
 #include <sys/mman.h>
 #include <sys/ipc.h>
 
-const int FILE_SIZE = 2048;
+const int FILE_SIZE = 1024;
 const char FILE_NAME[] = "temp.txt";
 
 int main(int argc, char* argv[]) 
@@ -73,6 +73,7 @@ int main(int argc, char* argv[])
 
     //define operations
 	struct sembuf WAIT[1], SIGNAL[1];
+
 	WAIT[0].sem_num = 0;
 	WAIT[0].sem_op = -1;
 	WAIT[0].sem_flg = SEM_UNDO;
@@ -81,7 +82,7 @@ int main(int argc, char* argv[])
 	SIGNAL[0].sem_op = 1;
 	SIGNAL[0].sem_flg = SEM_UNDO;
 
-	char* str = (char *)data + sizeof(int);
+	char* str = 1024;
 	char* line;
 	size_t length = 0;
 

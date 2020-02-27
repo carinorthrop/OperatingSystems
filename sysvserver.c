@@ -18,7 +18,7 @@
 #include <sys/mman.h>
 #include <sys/ipc.h>
 
-const int FILE_SIZE = 2048;
+const int FILE_SIZE = 1024;
 const char FILE_NAME[] = "temp.txt";
 
 //define union semun
@@ -90,7 +90,7 @@ int main()
 		exit(1);
     }
 
-	char* str = (char *)data + sizeof(int);
+	char* str = 1024;
 
 	//read in input 
 	int old = *data;
@@ -99,7 +99,7 @@ int main()
 		if (old != *data) 
         {
 			old = *data; 
-			printf("\n%s", str);
+			printf("%s", str);
 		}
 	}
 
