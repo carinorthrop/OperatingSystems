@@ -2,6 +2,7 @@
 // Homework 3 sysv client
 // Due Febuary 28th
 // OS 4029
+// referenced "synchronization"
 
 #include <errno.h>
 #include <ctype.h>
@@ -15,76 +16,95 @@
 #include <sys/shm.h>
 #include <sys/types.h>
 
-const int SHM_SIZE = 1024;
-const char FILE_NAME[] = "txt.txt";
+const int FILE_SIZE = sizeof(char) + sizeof(int);
+const char FILE_NAME[] = "temp.txt";
 
 int main(int argc, char* argv[]) 
 {
     //parameter checking
-    if (argc != 2) 
+	if (argc != 2) 
     {
 		printf("The correct parameters were not entered. Usage: file_name");
 		exit(1);
 	}
 
-	//create a key
+    //unique semaphore key
 	key_t key; 
-	if ((key =ftok(FILE_NAME, 1)) == -1) 
+    const char S_FILE_NAME[] = "semaphore.txt";
+	if ((key = ftok(S_FILE_NAME, 1)) == -1) 
     {
 		perror("ftok");
 		exit(1);
 	}
 
-	//create memory space
-	int shmid;
-	if ((shmid = shmget(key, SHM_SIZE, 0644|IPC_CREAT)) == -1) 
+	//open file
+	int fd;
+	if ((fd = open(FILE_NAME, O_RDWR|O_CREAT|O_TRUNC, 0644)) < 0) 
     {
-		perror("shmget");
+		perror("open");
 		exit(1);
 	}
 
-	//attach
-	char* data = shmat(shmid, (void *)0, 0);
-	if (data == (char *)(-1)) 
+    //get/create semaphore ID
+	int semaid;
+	if ((semaid = semget(key, 1, 0660|IPC_CREAT)) == -1) 
     {
-		perror("shmat");
+		perror("semget");
 		exit(1);
 	}
 
-	//open
-	FILE* file = fopen(argv[1], "r");
-	if (file == NULL) 
+	//mmap
+	int* data;
+	if ((data = (int *)mmap(NULL, FILE_SIZE, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED) 
+    {
+		perror("mmap");
+		exit(1);
+    }
+
+    //open file 
+	FILE* fp = fopen(argv[1], "r");
+	if (fp == NULL) 
     {
 		perror(argv[1]);
 		exit(1);
 	}
 
+    //define operations
+	struct sembuf WAIT[1], SIGNAL[1];
+	WAIT[0].sem_num = 0;
+	WAIT[0].sem_op = -1;
+	WAIT[0].sem_flg = SEM_UNDO;
+
+	SIGNAL[0].sem_num = 0;
+	SIGNAL[0].sem_op = 1;
+	SIGNAL[0].sem_flg = SEM_UNDO;
+
 	char* str = (char *)data + sizeof(int);
-	*data = 0;
 	char* line;
 	size_t length = 0;
 
-    //read in input
-	while (getline(&line, &length, file) != -1) 
+    //entry
+	semop(semaid, WAIT, 1);
+
+    //read in file
+	while (getline(&line, &length, fp) != -1) 
     {
-        //convert to uppercase
+		//convert to uppercase 
 		for (int i = 0; i < strlen(line); i++) 
         {
             line[i] = toupper(line[i]);
-        }
+        }  
 
 		strcpy(str, line);
 		(*data)++; 
 		sleep(1);
 	}
 
-	//detach 
-	if (shmdt(data) == -1) 
-	{
-        perror("shmdt");
-        exit(1);
-    }
+    //exit
+	semop(semaid, SIGNAL, 1);
 
-	//delete
-	shmdt(str);
+    //clean up
+	munmap(data, FILE_SIZE);
+    fclose(fp);
+	close(fd);
 }
