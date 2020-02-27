@@ -20,15 +20,14 @@
 const int FILE_SIZE = sizeof(char) + sizeof(int);
 const char FILE_NAME[] = "temp.txt";
 
-//define semun
-union semun 
-{
-    int val;
-} arg;
-
-
 int main() 
 { 
+    //define semun
+    union semun 
+    {
+        int val;
+    } arg;
+
     arg.val = 1;
 
     //unique semaphore key
