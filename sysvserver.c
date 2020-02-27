@@ -99,7 +99,7 @@ int main()
 		if (old != *data) 
         {
 			old = *data; 
-			printf("%s", str);
+			printf("\n%s", str);
 		}
 	}
 
