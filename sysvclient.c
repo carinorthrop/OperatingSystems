@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 
     //define operations
 	struct sembuf WAIT[1], SIGNAL[1];
-
+    
 	WAIT[0].sem_num = 0;
 	WAIT[0].sem_op = -1;
 	WAIT[0].sem_flg = SEM_UNDO;
@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
 	SIGNAL[0].sem_op = 1;
 	SIGNAL[0].sem_flg = SEM_UNDO;
 
-	char* str = 1024;
+	char* str = (char *)data + sizeof(int);
 	char* line;
 	size_t length = 0;
 

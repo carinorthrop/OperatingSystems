@@ -90,7 +90,7 @@ int main()
 		exit(1);
     }
 
-	char* str = 1024;
+	char* str = (char *)data + sizeof(int);
 
 	//read in input 
 	int old = *data;
