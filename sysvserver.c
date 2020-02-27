@@ -96,13 +96,13 @@ int main()
 		if (old != *data) 
         {
 			old = *data; 
-			printf("%s", str);}
+			printf("%s", str);
 		}
 	}
 
 	//clean up
-    munmap(data, FILE_SIZE);
-	semctl(semaid, 0, IPC_RMID, 0);
+	munmap(data, FILE_SIZE);
+    semctl(semaid, 0, IPC_RMID, 0);
+    fclose(fp);
 	close(fd);
-    remove(FILE_NAME);
 }
