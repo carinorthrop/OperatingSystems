@@ -13,8 +13,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
-#include <sys/shm.h>
+#include <sys/sem.h>
 #include <sys/types.h>
+#include <sys/mman.h>
+#include <sys/ipc.h>
 
 const int FILE_SIZE = sizeof(char) + sizeof(int);
 const char FILE_NAME[] = "temp.txt";
