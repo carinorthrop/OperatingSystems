@@ -20,14 +20,15 @@
 const int FILE_SIZE = sizeof(char) + sizeof(int);
 const char FILE_NAME[] = "temp.txt";
 
+//define semun
+union semun 
+{
+    int val;
+} arg;
+
+
 int main() 
 { 
-    //define semun
-    union semun 
-    {
-        int val;
-    } arg;
-
     arg.val = 1;
 
     //unique semaphore key
@@ -100,8 +101,8 @@ int main()
 	}
 
 	//clean up
+    munmap(data, FILE_SIZE);
 	semctl(semaid, 0, IPC_RMID, 0);
-    remove(FILE_NAME);
-	munmap(data, FILE_SIZE);
 	close(fd);
+    remove(FILE_NAME);
 }
