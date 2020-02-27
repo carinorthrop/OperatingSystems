@@ -18,7 +18,7 @@
 #include <sys/mman.h>
 #include <sys/ipc.h>
 
-const int FILE_SIZE = 1024;
+const int FILE_SIZE = 2048;
 const char FILE_NAME[] = "temp.txt";
 
 //define union semun
