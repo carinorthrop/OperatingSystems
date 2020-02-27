@@ -101,8 +101,8 @@ int main()
 	}
 
 	//clean up
+    remove(FILE_NAME);
 	munmap(data, FILE_SIZE);
-    semctl(semaid, 0, IPC_RMID, 0);
-    fclose(fp);
 	close(fd);
+    semctl(semaid, 0, IPC_RMID, 0);
 }
