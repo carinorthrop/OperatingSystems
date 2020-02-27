@@ -2,7 +2,7 @@
 // Homework 3 sysv client
 // Due Febuary 28th
 // OS 4029
-// referenced "synchronization"
+// referenced "synchronization" lecture slides
 
 #include <errno.h>
 #include <ctype.h>
@@ -18,7 +18,7 @@
 #include <sys/mman.h>
 #include <sys/ipc.h>
 
-const int FILE_SIZE = sizeof(char) + sizeof(int);
+const int FILE_SIZE = 1024;
 const char FILE_NAME[] = "temp.txt";
 
 int main(int argc, char* argv[]) 

@@ -2,6 +2,7 @@
 // Homework 3 sysv server
 // Due Febuary 28th
 // OS 4029
+// referenced "synchronization" lecture slides
 
 #include <errno.h>
 #include <ctype.h>
@@ -17,19 +18,21 @@
 #include <sys/mman.h>
 #include <sys/ipc.h>
 
-const int FILE_SIZE = sizeof(char) + sizeof(int);
+const int FILE_SIZE = 1024;
 const char FILE_NAME[] = "temp.txt";
 
-//define semun
+//define union semun
 union semun 
 {
-    int val;
+    int value;
+    struct semid_ds *buf;
+    ushort *array;
 } arg;
 
 
 int main() 
 { 
-    arg.val = 1;
+    arg.value = 1;
 
     //unique semaphore key
 	key_t key; 
